@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="admin" id="20200408">
+        <createTable tableName="PACKAGE">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="PATH" type="VARCHAR(2000)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="PARENT_ID" type="BIGINT" />
+
+            <column name="CREATED_AT" type="DATETIME" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="SCRIPT">
+            <column name="FILE_NAME" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="SOURCE" type="LONGTEXT" />
+
+            <column name="IMPORTED_AT" type="DATETIME" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="STATEMENT">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="PATH" type="VARCHAR(2000)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="PACKAGE_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="SCRIPT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TYPE" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="TEXT" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CREATED_AT" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="SCRIPT_IMPORTS">
+            <column name="SCRIPT_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="INTERNAL_STATEMENT_ID" type="BIGINT" />
+            <column name="EXTERNAL_STATEMENT_ID" type="VARCHAR(2000)" />
+        </createTable>
+
+        <createTable tableName="MAS_CHANGE_LOG">
+            <column name="CHANGE_TYPE" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="INIT_STATE" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="FINAL_STATE" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="CHANGE_DATE" type="DATETIME" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="PACKAGE"
+                baseColumnNames="PARENT_ID"
+                referencedTableName="PACKAGE"
+                referencedColumnNames="ID"
+                constraintName="fk_package_parent"
+                baseTableCatalogName="cat"
+                referencedTableCatalogName="cat"
+                baseTableSchemaName="public"
+                referencedTableSchemaName="public"
+                onUpdate="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="STATEMENT"
+                baseColumnNames="PACKAGE_ID"
+                referencedTableName="PACKAGE"
+                referencedColumnNames="ID"
+                constraintName="fk_statement_package"
+                baseTableCatalogName="cat"
+                referencedTableCatalogName="cat"
+                baseTableSchemaName="public"
+                referencedTableSchemaName="public"
+                onUpdate="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="STATEMENT"
+                baseColumnNames="SCRIPT"
+                referencedTableName="SCRIPT"
+                referencedColumnNames="FILE_NAME"
+                constraintName="fk_statement_script"
+                baseTableCatalogName="cat"
+                referencedTableCatalogName="cat"
+                baseTableSchemaName="public"
+                referencedTableSchemaName="public"
+                onUpdate="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="SCRIPT_IMPORTS"
+                baseColumnNames="SCRIPT_NAME"
+                referencedTableName="SCRIPT"
+                referencedColumnNames="FILE_NAME"
+                constraintName="fk_script_imports_script"
+                baseTableCatalogName="cat"
+                referencedTableCatalogName="cat"
+                baseTableSchemaName="public"
+                referencedTableSchemaName="public"
+                onUpdate="RESTRICT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="SCRIPT_IMPORTS"
+                baseColumnNames="INTERNAL_STATEMENT_ID"
+                referencedTableName="STATEMENT"
+                referencedColumnNames="ID"
+                constraintName="fk_script_import_intenral_statement_id"
+                baseTableCatalogName="cat"
+                referencedTableCatalogName="cat"
+                baseTableSchemaName="public"
+                referencedTableSchemaName="public"
+                onUpdate="RESTRICT"/>
+
+        <rollback>
+            <dropTable tableName="PACKAGE"/>
+            <dropTable tableName="SCRIPT"/>
+            <dropTable tableName="STATEMENT"/>
+            <dropTable tableName="SCRIPT_IMPORTS"/>
+            <dropTable tableName="MAS_CHANGE_LOG"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

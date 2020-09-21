@@ -1,0 +1,57 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    execute(script:String!): ParseResult!
+    ls(packageName:String!): PackageContent!
+    cat(file:String!) : MasScript
+
+    # dependencies(stmtPath:String!)
+}
+
+type Mutation {
+    commit(script:String!): ParseResult!
+    mvStatement(currentPath:String!, newPath:String!) : FixedMasStatement
+
+    # mvPackage
+    # deleteStatement
+}
+
+type ParseResult {
+    success: Boolean
+    packageName: String
+    scriptName: String
+    exportedStatements: [FixedMasStatement!]!
+    comments: [InspectionComment!]!
+}
+
+type FixedMasStatement {
+    name:String!
+    path:String!
+    text:String!
+    type:String!
+}
+
+type InspectionComment {
+    line:Int!
+    column:Int!
+    message:String!
+    type:String!
+}
+
+type MasPackage {
+    name: String!
+    path: String!
+}
+
+type PackageContent {
+    statements:[FixedMasStatement!]!
+    packages:[MasPackage!]!
+}
+
+type MasScript {
+    contents:String
+    fileName:String
+}
