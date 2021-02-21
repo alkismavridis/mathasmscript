@@ -22,15 +22,21 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.h2database:h2:1.4.200")
+
+	// DB
+	implementation("org.liquibase:liquibase-core:3.8.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("com.h2database:h2:1.4.200")
+
+	// GRAPHQL
+	implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.1")
+	implementation("com.graphql-java:graphiql-spring-boot-starter:5.0.2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 
-	implementation("org.liquibase:liquibase-core:3.8.0")
-	implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.1")
+
 }
 
 apply(plugin = "org.liquibase.gradle")

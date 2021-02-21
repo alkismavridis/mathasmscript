@@ -16,18 +16,16 @@ class GraphqlHttpListener(
     @CrossOrigin(origins = ["*"])
     @PostMapping(value = ["graphql"])
     fun executeGraphql(
-            @RequestParam(required = true) query: String,
-            @RequestParam(required = false, name = "variables") variablesString: String?,
-            @RequestParam(required = false) operationName:String?
+            @RequestBody params: GraphqlRequestParams
     ) : ResponseEntity<String> {
         try {
             val ctx = GraphqlRequestContext()
-            val variables:Map<String, Any?> = this.getVariables(variablesString)
+            val variables:Map<String, Any?> = this.getVariables(params.variables)
 
             val queryObject = ExecutionInput.Builder()
-                    .query(query)
+                    .query(params.query)
                     .variables(variables)
-                    .operationName(operationName)
+                    .operationName(params.operationName)
                     .context(ctx)
                     .build()
 
@@ -52,3 +50,8 @@ class GraphqlHttpListener(
     }
 }
 
+data class GraphqlRequestParams(
+        val query: String,
+        val variables: String?,
+        val operationName: String?
+)

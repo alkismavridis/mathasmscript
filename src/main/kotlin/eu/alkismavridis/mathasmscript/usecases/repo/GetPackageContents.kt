@@ -6,7 +6,7 @@ import eu.alkismavridis.mathasmscript.entities.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 
 fun getPackageContent(theoryId: Long, packageName: String, packageRepo:PackageRepository, stmtRepo: StatementRepository) : PackageContent {
-    packageRepo.find(packageName, theoryId) ?: throw MathAsmException("$packageName does not exists")
+    packageRepo.find(packageName, theoryId) ?: throw MathAsmException("$packageName does not exist")
 
     val statements = stmtRepo.findAllByPackage(packageName, theoryId)
     val subPackages = packageRepo.findAllByParent(packageName, theoryId)
