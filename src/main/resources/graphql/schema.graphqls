@@ -6,6 +6,7 @@ schema {
 }
 
 type Query {
+    theories: [Theory!]!
     execute(theoryId: Long!, script:String!): ParseResult!
     ls(theoryId: Long!, packageName:String!): PackageContent!
     cat(theoryId: Long!, file:String!) : MasScript
@@ -21,12 +22,15 @@ type Mutation {
     # deleteStatement
 }
 
-type ParseResult {
-    success: Boolean
-    packageName: String
-    scriptName: String
-    exportedStatements: [FixedMasStatement!]!
-    comments: [InspectionComment!]!
+type Theory {
+    id: Long!
+    name: String!
+}
+
+type MasPackage {
+    name: String!
+    path: String!
+    theoryId: Long!
 }
 
 type FixedMasStatement {
@@ -34,19 +38,6 @@ type FixedMasStatement {
     path: String!
     text: String!
     type: String!
-    theoryId: Long!
-}
-
-type InspectionComment {
-    line: Int!
-    column: Int!
-    message: String!
-    type: String!
-}
-
-type MasPackage {
-    name: String!
-    path: String!
     theoryId: Long!
 }
 
@@ -59,4 +50,19 @@ type MasScript {
     contents:String
     fileName:String
     theoryId: Long!
+}
+
+type ParseResult {
+    success: Boolean
+    packageName: String
+    scriptName: String
+    exportedStatements: [FixedMasStatement!]!
+    comments: [InspectionComment!]!
+}
+
+type InspectionComment {
+    line: Int!
+    column: Int!
+    message: String!
+    type: String!
 }
