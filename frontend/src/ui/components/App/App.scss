@@ -1,5 +1,4 @@
-$my-color: #61dafb;
-
+@import "../../css/colors";
 
 .App {
   text-align: center;
@@ -28,7 +27,7 @@ $my-color: #61dafb;
 }
 
 .App-link {
-  color: $my-color;
+  color: $main-color;
 }
 
 @keyframes App-logo-spin {

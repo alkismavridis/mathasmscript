@@ -1,13 +1,13 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.read_token
 
-import eu.alkismavridis.mathasmscript.model.parser.*
-import eu.alkismavridis.mathasmscript.model.parser.MasLogger
+import eu.alkismavridis.mathasmscript.entities.parser.*
+import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
 import java.io.Reader
 import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 
-class MasTokenizer(private val reader: Reader, private val logger: MasLogger) {
+class MasTokenizer(private val reader: Reader, private val logger: MathasmInspections) {
     private var line = 1
     private var column = 1
     private var rolledBackCharacter: Char? = null

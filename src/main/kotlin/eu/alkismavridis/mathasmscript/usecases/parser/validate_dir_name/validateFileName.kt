@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.validate_dir_name
 
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmException
+import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import java.util.regex.Pattern
 
 

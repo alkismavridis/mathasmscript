@@ -1,16 +1,15 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmException
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmStatement
-import eu.alkismavridis.mathasmscript.model.parser.MasLogger
-import eu.alkismavridis.mathasmscript.model.parser.MasRepositoryImports
-import eu.alkismavridis.mathasmscript.model.parser.NameToken
+import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
+import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
+import eu.alkismavridis.mathasmscript.entities.parser.MasRepositoryImports
+import eu.alkismavridis.mathasmscript.entities.parser.NameToken
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolvedImport
-import java.util.stream.Collectors
 
 class ScopeException(message:String) : MathAsmException(message)
 
-class MasScope(private val parent: MasScope?, private val logger: MasLogger) {
+class MasScope(private val parent: MasScope?, private val logger: MathasmInspections) {
     private val declarations = mutableMapOf<String, MasDeclaration>()
 
 
@@ -103,7 +102,7 @@ class MasScope(private val parent: MasScope?, private val logger: MasLogger) {
 }
 
 private open class MasDeclaration(val nameToken: NameToken) {
-    open fun getStatement(logger: MasLogger) : MathAsmStatement {
+    open fun getStatement(logger: MathasmInspections) : MathAsmStatement {
         val error = "${this.nameToken.name} is not a statement symbol"
         logger.error(this.nameToken.line, this.nameToken.column, error)
         throw ScopeException(error)
@@ -114,14 +113,14 @@ private class StatementDeclaration(
         name: NameToken,
         val stmt:MathAsmStatement,
         val isPrivate:Boolean) : MasDeclaration(name) {
-    override fun getStatement(logger: MasLogger) = this.stmt
+    override fun getStatement(logger: MathasmInspections) = this.stmt
 }
 
 private class ImportDeclaration(val repoUrl:String, val fullName:String, localName: NameToken) : MasDeclaration(localName) {
     var importData: ResolvedImport? = null
     private var isUsed = false
 
-    override fun getStatement(logger: MasLogger) : MathAsmStatement {
+    override fun getStatement(logger: MathasmInspections) : MathAsmStatement {
         if (this.importData == null) {
             val error = "Import statement ${this.nameToken.name} is not resolved"
             logger.error(this.nameToken.line, this.nameToken.column, error)
@@ -131,7 +130,7 @@ private class ImportDeclaration(val repoUrl:String, val fullName:String, localNa
         return this.importData!!.statement
     }
 
-    fun setData(importData:ResolvedImport, logger: MasLogger) {
+    fun setData(importData:ResolvedImport, logger: MathasmInspections) {
         if (this.importData != null) {
             logger.error(this.nameToken.line, this.nameToken.column, "Cannot set value for import symbol ${this.nameToken.name}. It already contains a statement.")
         }
@@ -143,7 +142,7 @@ private class ImportDeclaration(val repoUrl:String, val fullName:String, localNa
         this.isUsed = true
     }
 
-    fun assertUsed(logger: MasLogger) {
+    fun assertUsed(logger: MathasmInspections) {
         if (!this.isUsed) {
             logger.error(this.nameToken.line, this.nameToken.column, "Unused import statement detected: ${this.nameToken.name}")
         }

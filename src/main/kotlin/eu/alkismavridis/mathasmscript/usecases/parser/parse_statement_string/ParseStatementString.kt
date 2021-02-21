@@ -1,10 +1,10 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.parse_statement_string
 
-import eu.alkismavridis.mathasmscript.model.parser.SymbolMap
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmException
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmSentence
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmStatement
-import eu.alkismavridis.mathasmscript.model.logic.StatementType
+import eu.alkismavridis.mathasmscript.entities.parser.SymbolMap
+import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.entities.logic.MathAsmExpression
+import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
+import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import java.io.Reader
 import java.lang.NumberFormatException
 import java.lang.StringBuilder
@@ -41,7 +41,7 @@ class ParseStatementString(
 
 
     /// STATEMENT BUILDING
-    internal fun commitAxiomCreation() : MathAsmStatement {
+    private fun commitAxiomCreation() : MathAsmStatement {
         if(this.grade == -1) {
             throw ParseAxiomException("Cannot create an axiom ${this.name} without a connection")
         }
@@ -57,15 +57,15 @@ class ParseStatementString(
         return MathAsmStatement(
                 this.name,
                 this.type,
-                MathAsmSentence(this.left.toLongArray(), false),
-                MathAsmSentence(this.right.toLongArray(), false),
+                MathAsmExpression(this.left.toLongArray(), false),
+                MathAsmExpression(this.right.toLongArray(), false),
                 this.isBidirectional,
                 this.grade
 
         )
     }
 
-    internal fun integrateToken(token:String) {
+    private fun integrateToken(token:String) {
         if (!token.endsWith("-->")) {
             this.integrateSymbol(token)
             return
@@ -86,7 +86,7 @@ class ParseStatementString(
         }
     }
 
-    internal fun integrateSymbol(symbol: String) {
+    private fun integrateSymbol(symbol: String) {
         val symbolToAdd = this.symbolMap.getOrCreateId(symbol)
         if (this.grade == -1) {
             this.left.add(symbolToAdd)
@@ -95,7 +95,7 @@ class ParseStatementString(
         }
     }
 
-    internal fun integrateConnection(grade:Int, isBidirectional:Boolean) {
+    private fun integrateConnection(grade:Int, isBidirectional:Boolean) {
         if (this.grade != -1) {
             throw ParseAxiomException("Second connection found at axiom ${this.name}")
         }
@@ -104,7 +104,7 @@ class ParseStatementString(
         this.isBidirectional = isBidirectional
     }
 
-    internal fun integrateConnection(grade:String, isBidirectional:Boolean) {
+    private fun integrateConnection(grade:String, isBidirectional:Boolean) {
         try {
             val gradeAsInt = Integer.parseInt(grade)
             if (gradeAsInt < 0) {
@@ -117,14 +117,14 @@ class ParseStatementString(
 
 
     /// PARSING
-    internal fun isWhiteSpaceOrNewLine(ch:Char) : Boolean {
+    private fun isWhiteSpaceOrNewLine(ch:Char) : Boolean {
         return ch == ' ' ||
                 ch == '\t' ||
                 ch == '\r' ||
                 ch == '\n'
     }
 
-    internal fun readNextNonWhiteNorNewLine() : Char {
+    private fun readNextNonWhiteNorNewLine() : Char {
         while (true) {
             val nextChar = this.getNextChar()
             if (!this.isWhiteSpaceOrNewLine(nextChar)) {
@@ -133,7 +133,7 @@ class ParseStatementString(
         }
     }
 
-    internal fun getNextChar() : Char {
+    private fun getNextChar() : Char {
         if (this.rolledBackCharacter != null) {
             val ret = this.rolledBackCharacter!!
             this.rolledBackCharacter = null
@@ -146,7 +146,7 @@ class ParseStatementString(
             nextByte.toChar()
     }
 
-    internal fun getNextToken(firstChar:Char) : String {
+    private fun getNextToken(firstChar:Char) : String {
         val builder = StringBuilder().append(firstChar)
         while(true) {
             val nextChar = this.getNextChar()

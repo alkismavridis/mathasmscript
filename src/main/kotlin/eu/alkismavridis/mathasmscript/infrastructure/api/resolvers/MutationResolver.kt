@@ -1,21 +1,13 @@
 package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.*
-import eu.alkismavridis.mathasmscript.model.logic.MathAsmException
-import eu.alkismavridis.mathasmscript.model.logic.StatementType
-import eu.alkismavridis.mathasmscript.model.parser.ParseResult
-import eu.alkismavridis.mathasmscript.model.repo.FixedMasStatement
-import eu.alkismavridis.mathasmscript.usecases.parser.get_parent_package.GetParentPackage
-import eu.alkismavridis.mathasmscript.usecases.parser.get_simple_name.GetSimpleName
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_package_part_name.ValidatePackagePartName
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_theorem_name.ValidateStatementName
-import eu.alkismavridis.mathasmscript.usecases.repo.import_script.ImportScript
-import eu.alkismavridis.mathasmscript.usecases.repo.move_statement.MoveStatement
-import eu.alkismavridis.mathasmscript.usecases.repo.save_package.GetOrCreatePackage
+import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
+import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.usecases.repo.ImportScript
+import eu.alkismavridis.mathasmscript.usecases.repo.moveStatement
 import graphql.kickstart.tools.GraphQLMutationResolver
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.time.Instant
 
 
 @Component
@@ -42,6 +34,6 @@ class MutationResolver(
     }
 
     fun mvStatement(currentPath:String, newPath:String) : FixedMasStatement {
-        return MoveStatement.move(currentPath, newPath, this.stmtRepo, this.packageRepo)
+        return moveStatement(currentPath, newPath, this.stmtRepo, this.packageRepo)
     }
 }
