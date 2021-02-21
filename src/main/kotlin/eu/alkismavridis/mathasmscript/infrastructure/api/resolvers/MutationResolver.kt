@@ -16,11 +16,6 @@ class MutationResolver(
         private val stmtRepo: DbStatementRepository,
         private val scriptRepo: DbScriptRepository
 ) : GraphQLMutationResolver {
-
-    companion object {
-        val log = LoggerFactory.getLogger(MutationResolver::class.java)
-    }
-
     fun commit(script: String): ParseResult {
         return ImportScript(this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
     }
@@ -35,5 +30,9 @@ class MutationResolver(
 
     fun mvStatement(currentPath:String, newPath:String) : FixedMasStatement {
         return moveStatement(currentPath, newPath, this.stmtRepo, this.packageRepo)
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(MutationResolver::class.java)
     }
 }

@@ -17,18 +17,16 @@ class GraphqlHttpListener(
     @PostMapping(value = ["graphql"])
     fun executeGraphql(
             @RequestParam(required = true) query: String,
-            @RequestParam(required = false) variables: String?,
+            @RequestParam(required = false, name = "variables") variablesString: String?,
             @RequestParam(required = false) operationName:String?
     ) : ResponseEntity<String> {
         try {
             val ctx = GraphqlRequestContext()
-            val varsMap:Map<String, Any?> = if (variables == null)
-                emptyMap() else
-                this.graphqlObjectMapper.readValue(variables, Map::class.java) as Map<String, Any?>
+            val variables:Map<String, Any?> = this.getVariables(variablesString)
 
             val queryObject = ExecutionInput.Builder()
                     .query(query)
-                    .variables(varsMap)
+                    .variables(variables)
                     .operationName(operationName)
                     .context(ctx)
                     .build()
@@ -43,6 +41,14 @@ class GraphqlHttpListener(
                     .status(HttpStatus.BAD_REQUEST)
                     .body("{\"success\":false, \"errorMessage\":\"${e.message}\"}")
         }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getVariables(variablesString: String?) : Map<String, Any?> {
+        return if (variablesString == null)
+            emptyMap() else
+            this.graphqlObjectMapper.readValue(variablesString, Map::class.java) as Map<String, Any?>
+
     }
 }
 
