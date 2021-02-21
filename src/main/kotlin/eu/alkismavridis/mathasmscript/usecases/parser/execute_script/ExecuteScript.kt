@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 import java.io.StringReader
 import java.util.*
 
-class ExecuteScript(val stmtRepo: StatementRepository) {
+class ExecuteScript(private val theoryId: Long, private val stmtRepo: StatementRepository) {
 
     fun run(script:String) : ParseResult {
         val inspections = MathasmInspections()
@@ -17,10 +17,10 @@ class ExecuteScript(val stmtRepo: StatementRepository) {
         var packageName = ""
 
         try {
-            val result = ParseScript(StringReader(script), this.stmtRepo, inspections).run()
+            val result = ParseScript(this.theoryId, StringReader(script), this.stmtRepo, inspections).run()
             packageName = result.packageName
 
-            AssertStatementsNotExisting.check(result.exportedStatements, this.stmtRepo, inspections)
+            AssertStatementsNotExisting.check(this.theoryId, result.exportedStatements, this.stmtRepo, inspections)
             return ParseResult(!inspections.hasErrors(), result.packageName, scriptName, result.exportedStatements, inspections.getEntries())
         } catch (e: Throwable) {
             log.debug("Error while executing script", e)

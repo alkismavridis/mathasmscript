@@ -7,9 +7,9 @@ import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 
 class AssertStatementsNotExisting {
     companion object {
-        fun check(statements:Collection<FixedMasStatement>, repo: StatementRepository, logger: MathasmInspections) {
+        fun check(theoryId: Long, statements:Collection<FixedMasStatement>, repo: StatementRepository, logger: MathasmInspections) {
             val fullNames = statements.map{it.path}
-            val existingInRepository = repo.findExistingNames(fullNames)
+            val existingInRepository = repo.findExistingNames(fullNames, theoryId)
             if (existingInRepository.isEmpty()) {
                 return
             }

@@ -4,7 +4,6 @@ import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalBaseException
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalSentenceReplacementException
-import eu.alkismavridis.mathasmscript.usecases.logic.replace_in_sentence.replaceAllInSentence
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

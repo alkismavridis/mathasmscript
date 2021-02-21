@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.assert_statement_mutable
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.StatementImmutableException

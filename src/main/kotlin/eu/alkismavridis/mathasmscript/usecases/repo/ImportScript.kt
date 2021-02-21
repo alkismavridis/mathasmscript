@@ -3,6 +3,7 @@ package eu.alkismavridis.mathasmscript.usecases.repo
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
+import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.entities.repo.ScriptRepository
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
@@ -14,14 +15,19 @@ import java.time.Instant
 import java.util.*
 
 
-class ImportScript(val stmtRepo: StatementRepository, val packageRepo: PackageRepository, val scriptRepo: ScriptRepository) {
+class ImportScript(
+        private val theoryId: Long,
+        private val stmtRepo: StatementRepository,
+        private val packageRepo: PackageRepository,
+        private val scriptRepo: ScriptRepository
+) {
     fun run(scriptText: String) : ParseResult {
         val inspections = MathasmInspections()
         val scriptName = "${UUID.randomUUID()}.mas"
         var packageName = ""
 
         try {
-            val result = ParseScript(StringReader(scriptText), this.stmtRepo, inspections).run()
+            val result = ParseScript(this.theoryId, StringReader(scriptText), this.stmtRepo, inspections).run()
             packageName = result.packageName
 
             this.assertResultValidity(result, inspections)
@@ -48,11 +54,12 @@ class ImportScript(val stmtRepo: StatementRepository, val packageRepo: PackageRe
 
     private fun saveResult(result: MasParserResult, scriptName: String, scriptText: String) {
         val creationDate = Instant.now()
-        val packageToSave = getOrCreatePackage(result.packageName, creationDate, this.packageRepo)
+        val packageToSave = getOrCreatePackage(this.theoryId, result.packageName, creationDate, this.packageRepo)
         result.exportedStatements.forEach{ it.packageId = packageToSave.id }
 
         log.info("Saving script {}", scriptName)
-        this.scriptRepo.saveScript(scriptName, result.packageName, scriptText, result.importedIds)
+        val script = MasScript(this.theoryId, scriptText, scriptName, Instant.now())
+        this.scriptRepo.saveScript(script, result.importedIds)
 
         log.info("Importing {} statements for script {}", result.exportedStatements.size, result.packageName)
         this.stmtRepo.saveAll(ArrayList(result.exportedStatements), scriptName, creationDate)
@@ -65,7 +72,7 @@ class ImportScript(val stmtRepo: StatementRepository, val packageRepo: PackageRe
             throw MathAsmException(errorMessage)
         }
 
-        AssertStatementsNotExisting.check(result.exportedStatements, this.stmtRepo, inspections)
+        AssertStatementsNotExisting.check(this.theoryId, result.exportedStatements, this.stmtRepo, inspections)
     }
 
     companion object {

@@ -10,7 +10,7 @@ import java.lang.NumberFormatException
 import java.lang.StringBuilder
 
 
-class ParseAxiomException(message:String) : MathAsmException(message) {}
+class ParseAxiomException(message:String) : MathAsmException(message)
 
 class ParseStatementString(
         private val reader:Reader,
@@ -112,7 +112,6 @@ class ParseStatementString(
             }
             this.integrateConnection(gradeAsInt, isBidirectional)
         } catch (e: NumberFormatException) {}
-
     }
 
 

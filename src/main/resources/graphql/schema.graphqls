@@ -1,19 +1,21 @@
+scalar Long
+
 schema {
     query: Query
     mutation: Mutation
 }
 
 type Query {
-    execute(script:String!): ParseResult!
-    ls(packageName:String!): PackageContent!
-    cat(file:String!) : MasScript
+    execute(theoryId: Long!, script:String!): ParseResult!
+    ls(theoryId: Long!, packageName:String!): PackageContent!
+    cat(theoryId: Long!, file:String!) : MasScript
 
-    # dependencies(stmtPath:String!)
+    dependencies(statementId: Long!) : [FixedMasStatement!]!
 }
 
 type Mutation {
-    commit(script:String!): ParseResult!
-    mvStatement(currentPath:String!, newPath:String!) : FixedMasStatement
+    commit(theoryId: Long!, script:String!): ParseResult!
+    mvStatement(theoryId: Long!, currentPath:String!, newPath:String!) : FixedMasStatement
 
     # mvPackage
     # deleteStatement
@@ -28,30 +30,33 @@ type ParseResult {
 }
 
 type FixedMasStatement {
-    name:String!
-    path:String!
-    text:String!
-    type:String!
+    name: String!
+    path: String!
+    text: String!
+    type: String!
+    theoryId: Long!
 }
 
 type InspectionComment {
-    line:Int!
-    column:Int!
-    message:String!
-    type:String!
+    line: Int!
+    column: Int!
+    message: String!
+    type: String!
 }
 
 type MasPackage {
     name: String!
     path: String!
+    theoryId: Long!
 }
 
 type PackageContent {
-    statements:[FixedMasStatement!]!
-    packages:[MasPackage!]!
+    statements: [FixedMasStatement!]!
+    packages: [MasPackage!]!
 }
 
 type MasScript {
     contents:String
     fileName:String
+    theoryId: Long!
 }

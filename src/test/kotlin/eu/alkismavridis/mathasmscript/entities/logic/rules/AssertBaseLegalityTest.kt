@@ -2,7 +2,6 @@ package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalBaseException
-import eu.alkismavridis.mathasmscript.usecases.logic.assert_base_legality.assertBaseLegality
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

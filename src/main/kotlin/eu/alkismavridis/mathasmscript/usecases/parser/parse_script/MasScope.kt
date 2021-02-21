@@ -5,6 +5,7 @@ import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
 import eu.alkismavridis.mathasmscript.entities.parser.MasRepositoryImports
 import eu.alkismavridis.mathasmscript.entities.parser.NameToken
+import eu.alkismavridis.mathasmscript.entities.repo.ImportId
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolvedImport
 
 class ScopeException(message:String) : MathAsmException(message)

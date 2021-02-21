@@ -1,8 +1,7 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.start_theorem
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalTheoremStartException
-import eu.alkismavridis.mathasmscript.usecases.logic.assert_base_legality.assertBaseLegality
 
 fun startTheorem(name:String, base: MathAsmStatement, side: StatementSide) : MathAsmStatement {
     assertStartValidity(base, side)

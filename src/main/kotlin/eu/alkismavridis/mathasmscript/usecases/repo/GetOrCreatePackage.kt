@@ -9,9 +9,9 @@ import java.util.stream.Collectors
 
 private val log = LoggerFactory.getLogger("getOrCreatePackage")
 
-fun getOrCreatePackage(path:String, createdAt: Instant, repo:PackageRepository) : MasPackage {
+fun getOrCreatePackage(theoryId: Long, path:String, createdAt: Instant, repo:PackageRepository) : MasPackage {
     val parentNames = getParentNames(path)
-    val existingParents = getPackageMap(parentNames, repo)
+    val existingParents = getPackageMap(theoryId, parentNames, repo)
 
     for (i in parentNames.indices) {
         val parentName = parentNames[i]
@@ -23,7 +23,7 @@ fun getOrCreatePackage(path:String, createdAt: Instant, repo:PackageRepository) 
         if (existingPackage != null) continue
 
         log.info("Creating package {}", parentName)
-        val newPackage = MasPackage(parentName, existingParent?.id, createdAt, -1L)
+        val newPackage = MasPackage(-1L, theoryId, parentName, existingParent?.id , createdAt)
         repo.saveAll(listOf(newPackage))
         existingParents[ newPackage.path ] = newPackage
         log.info("Package {} was created with id {}", newPackage.path, newPackage.id)
@@ -49,8 +49,8 @@ private fun getParentNames(path: String) : List<String> {
     return parentNames
 }
 
-private fun getPackageMap(paths:List<String>, repo:PackageRepository) : MutableMap<String, MasPackage> {
-    val existingParents = repo.findExistingNames(paths)
+private fun getPackageMap(theoryId: Long, paths:List<String>, repo:PackageRepository) : MutableMap<String, MasPackage> {
+    val existingParents = repo.findExistingNames(paths, theoryId)
     val result = mutableMapOf<String, MasPackage>()
     existingParents.forEach { result[it.path] = it }
 

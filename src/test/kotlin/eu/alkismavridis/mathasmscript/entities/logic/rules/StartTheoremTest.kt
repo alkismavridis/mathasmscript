@@ -5,7 +5,6 @@ import eu.alkismavridis.mathasmscript.entities.logic.StatementSide
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalBaseException
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalTheoremStartException
-import eu.alkismavridis.mathasmscript.usecases.logic.start_theorem.startTheorem
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

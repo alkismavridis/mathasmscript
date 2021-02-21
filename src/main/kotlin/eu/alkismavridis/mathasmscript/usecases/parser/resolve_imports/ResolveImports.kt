@@ -18,7 +18,7 @@ class ResolvedImport(
         val externalUrl: String
 )
 
-class ResolveImports(private val repository: StatementRepository) {
+class ResolveImports(private val repository: StatementRepository, private val theoryId: Long) {
     fun resolve(imports: Collection<MasRepositoryImports>, map: SymbolMap, parseLogger: MathasmInspections) : Map<NameToken, ResolvedImport> {
         val result = mutableMapOf<NameToken, ResolvedImport>()
 
@@ -35,7 +35,7 @@ class ResolveImports(private val repository: StatementRepository) {
     }
 
     private fun importLocal(repositoryImports: MasRepositoryImports, result: MutableMap<NameToken, ResolvedImport>, map: SymbolMap, parseLogger: MathasmInspections) {
-        val fromDb = this.repository.findAll(repositoryImports.variables.values)
+        val fromDb = this.repository.findAll(repositoryImports.variables.values, this.theoryId)
         fromDb.forEach {
             val localName = repositoryImports.getLocalNameFor(it.path)
             if (localName == null) {

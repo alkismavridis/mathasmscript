@@ -2,7 +2,6 @@ package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.StatementImmutableException
-import eu.alkismavridis.mathasmscript.usecases.logic.assert_statement_mutable.assertStatementMutability
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

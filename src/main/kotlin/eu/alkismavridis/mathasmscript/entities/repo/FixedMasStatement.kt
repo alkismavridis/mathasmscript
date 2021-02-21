@@ -7,5 +7,6 @@ class FixedMasStatement (
         var packageId: Long,
         val type:StatementType,
         val text:String,
-        var id: Long
+        val theoryId: Long,
+        val id: Long
 )

@@ -16,11 +16,11 @@ class MutationResolver(
         private val stmtRepo: DbStatementRepository,
         private val scriptRepo: DbScriptRepository
 ) : GraphQLMutationResolver {
-    fun commit(script: String): ParseResult {
-        return ImportScript(this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
+    fun commit(theoryId: Long, script: String): ParseResult {
+        return ImportScript(theoryId, this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
     }
 
-    fun mvPackage(currentPath:String, newPath:String) {
+    fun mvPackage(theoryId: Long, currentPath:String, newPath:String) {
         //1. Update package with new path + parentId. BE CAREFUL OF circular trees. Our new parent should not be a current child!
         //2. Update all affected full paths:
         // UPDATE PACKAGE SET PATH = CONCAT('booooo', SUBSTRING(PATH, LENGTH('bool.'), LENGTH(PATH))) WHERE PATH LIKE 'bool.%'
@@ -28,8 +28,8 @@ class MutationResolver(
         //3. Update all affected statements (sql similar to the one above)
     }
 
-    fun mvStatement(currentPath:String, newPath:String) : FixedMasStatement {
-        return moveStatement(currentPath, newPath, this.stmtRepo, this.packageRepo)
+    fun mvStatement(theoryId: Long, currentPath:String, newPath:String) : FixedMasStatement {
+        return moveStatement(theoryId, currentPath, newPath, this.stmtRepo, this.packageRepo)
     }
 
     companion object {

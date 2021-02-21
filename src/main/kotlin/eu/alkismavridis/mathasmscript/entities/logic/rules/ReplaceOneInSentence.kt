@@ -1,9 +1,7 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.replace_single_match
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalSingleReplacementException
-import eu.alkismavridis.mathasmscript.usecases.logic.assert_base_legality.assertBaseLegality
-import eu.alkismavridis.mathasmscript.usecases.logic.get_open_theorem.getOpenTheorem
 
 fun replaceSingleMatch(target:MathAsmStatement, sideToEdit:StatementSide, positionToReplace:Int, base: MathAsmStatement, sel: LogicSelection, nameForClones:String) : MathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)

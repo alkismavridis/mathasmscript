@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.assert_base_legality
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalBaseException

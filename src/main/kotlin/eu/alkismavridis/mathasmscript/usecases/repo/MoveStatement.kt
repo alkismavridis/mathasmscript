@@ -11,19 +11,21 @@ import eu.alkismavridis.mathasmscript.usecases.parser.validate_package_part_name
 import eu.alkismavridis.mathasmscript.usecases.parser.validate_theorem_name.ValidateStatementName
 import java.time.Instant
 
-fun moveStatement(currentPath:String, newPath:String, stmtRepo:StatementRepository, packageRepo:PackageRepository) : FixedMasStatement {
-    val currentStatement = stmtRepo.findByPath(currentPath) ?: throw MathAsmException("Statement with path $currentPath not found.")
+fun moveStatement(theoryId: Long, currentPath:String, newPath:String, stmtRepo:StatementRepository, packageRepo:PackageRepository) : FixedMasStatement {
+    val currentStatement = stmtRepo.findByPath(currentPath, theoryId)
+            ?: throw MathAsmException("Statement with path $currentPath not foundtheoryId.")
     if (currentPath == newPath) return currentStatement
 
     val newPackageName = GetParentPackage.get(newPath)
     validateNewName(currentStatement, newPackageName, GetSimpleName.get(newPath))
 
-    val targetPackage = getOrCreatePackage(newPackageName, Instant.now(), packageRepo)
+    val targetPackage = getOrCreatePackage(theoryId, newPackageName, Instant.now(), packageRepo)
     val newStatement = FixedMasStatement(
             newPath,
             targetPackage.id,
             currentStatement.type,
             currentStatement.text,
+            currentStatement.theoryId,
             currentStatement.id
     )
     stmtRepo.update(newStatement, currentPath)

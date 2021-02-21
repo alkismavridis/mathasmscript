@@ -6,35 +6,32 @@ import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.rules.stabilizeOpenTheorem
 import eu.alkismavridis.mathasmscript.entities.parser.*
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
+import eu.alkismavridis.mathasmscript.entities.repo.ImportId
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.usecases.parser.parse_statement_string.ParseStatementString
 import eu.alkismavridis.mathasmscript.usecases.parser.read_token.MasTokenizer
 import eu.alkismavridis.mathasmscript.usecases.parser.validate_package_part_name.ValidatePackagePartName
 import eu.alkismavridis.mathasmscript.usecases.parser.validate_theorem_name.ValidateStatementName
-import eu.alkismavridis.mathasmscript.usecases.logic.replace_all.replaceAll
-import eu.alkismavridis.mathasmscript.usecases.logic.replace_in_sentence.replaceAllInSentence
-import eu.alkismavridis.mathasmscript.usecases.logic.replace_single_match.replaceSingleMatch
-import eu.alkismavridis.mathasmscript.usecases.logic.revert_statement.revertStatement
-import eu.alkismavridis.mathasmscript.usecases.logic.start_theorem.startTheorem
+import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAll
+import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAllInSentence
+import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceSingleMatch
+import eu.alkismavridis.mathasmscript.entities.logic.rules.revertStatement
+import eu.alkismavridis.mathasmscript.entities.logic.rules.startTheorem
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolveImports
 import java.io.Reader
 import java.io.StringReader
 import java.lang.StringBuilder
 
-class ImportId(
-        val internalId:Long,
-        val externalId:String
-)
 
 class MasParserResult(
-        val packageName:String,
+        val packageName: String,
         val exportedStatements: Collection<FixedMasStatement>,
         val importedIds: List<ImportId>
 )
 
-private class TokenLineInfo(val linesBeforeToken:Int, val token: MasToken)
+private class TokenLineInfo(val linesBeforeToken: Int, val token: MasToken)
 
-class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
+class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
     companion object {
         const val ANONYMOUS_EXPRESSION_NAME = "AnonymousExpression"
     }
@@ -53,18 +50,20 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
 
 
     /// STATEMENT PARSING
-    fun run() : MasParserResult {
-        while (this.parseNextStatement()) { /* continue parsing until we hit the end */ }
+    fun run(): MasParserResult {
+        while (this.parseNextStatement()) { /* continue parsing until we hit the end */
+        }
         this.scope.assertAllImportsAreUsed()
 
         return MasParserResult(
                 this.packageName,
-                this.scope.getExportableStatements().map{
+                this.scope.getExportableStatements().map {
                     FixedMasStatement(
                             "${this.packageName}.${it.name}",
                             -1L,
                             it.type,
                             this.symbolMap.toString(it),
+                            this.theoryId,
                             -1L
                     )
                 },
@@ -73,7 +72,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
     }
 
     /** Returns true if parsing should continue. */
-    private fun parseNextStatement() : Boolean {
+    private fun parseNextStatement(): Boolean {
         val nextToken = this.getNextNonNL()
         if (nextToken.type == MasTokenType.EOF) {
             return false
@@ -84,7 +83,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         }
 
         val asIdToken = nextToken as NameToken
-        when(asIdToken.name) {
+        when (asIdToken.name) {
             "package" -> this.parsePackageStatement(asIdToken)
             "import" -> this.parseImportStatement(asIdToken, "")
             "axiom" -> this.parseAxiomStatement(asIdToken)
@@ -107,7 +106,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         this.packageName = this.readPackageName(true)
     }
 
-    private fun readPackageName(requireEndOfLine: Boolean) : String {
+    private fun readPackageName(requireEndOfLine: Boolean): String {
         val firstPackagePart = this.requireIdentifier()
         if (!ValidatePackagePartName.isPackagePartNameValid(firstPackagePart.name)) {
             throw this.addError(firstPackagePart, ValidatePackagePartName.ERROR_MESSAGE)
@@ -128,14 +127,14 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
             }
 
             if (requireEndOfLine) {
-                throw this.addError(nextToken,"Expected end of line after package statement")
+                throw this.addError(nextToken, "Expected end of line after package statement")
             }
         }
 
         return builder.toString()
     }
 
-    private fun parseImportStatement(openingStatementToken: MasToken, repoUrl:String) {
+    private fun parseImportStatement(openingStatementToken: MasToken, repoUrl: String) {
         if (this.packageName == "") {
             throw this.addError(openingStatementToken, "Imports must declared after package statement")
         }
@@ -162,7 +161,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
             } else if (nextTokenInfo.token.type == MasTokenType.CURLY_OPEN) {
                 val paramsToImport = this.parseImportVariables()
                 val packageName = builder.toString()
-                paramsToImport.forEach{ (localNameToken, officialNameToken) ->
+                paramsToImport.forEach { (localNameToken, officialNameToken) ->
                     this.scope.declareImport(repoUrl, "$packageName.${officialNameToken.name}", localNameToken)
                 }
                 this.requireNewLineOrEof()
@@ -179,9 +178,9 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         }
     }
 
-    private fun parseImportVariables() : Map<NameToken, NameToken> {
+    private fun parseImportVariables(): Map<NameToken, NameToken> {
         val result = mutableMapOf<NameToken, NameToken>() //localName: officialName
-        while(true) {
+        while (true) {
             val next = this.getNextNonNL()
             if (next.type == MasTokenType.CURLY_CLOSE) break
 
@@ -191,7 +190,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
 
             val officialNameToken = next as NameToken
             val tokenAfterName = this.getNextNonNL()
-            when(tokenAfterName.type) {
+            when (tokenAfterName.type) {
                 MasTokenType.NAME -> {
                     if ((tokenAfterName as NameToken).name != "as") {
                         throw this.addError(tokenAfterName, "Expected as , or } but found ${tokenAfterName.getTextRepresentation()}")
@@ -201,8 +200,9 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
                     result[localNameToken] = officialNameToken
 
                     val tokenAfterOfficialName = this.getNextNonNL()
-                    when(tokenAfterOfficialName.type) {
-                        MasTokenType.COMMA -> { /*just continue*/ }
+                    when (tokenAfterOfficialName.type) {
+                        MasTokenType.COMMA -> { /*just continue*/
+                        }
                         MasTokenType.CURLY_CLOSE -> {
                             this.rolledBackToken = tokenAfterOfficialName
                         }
@@ -272,7 +272,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
 
 
     /// TOKEN GETTERS
-    private fun requireIdentifier() : NameToken {
+    private fun requireIdentifier(): NameToken {
         val nextToken = this.getNextNonNL()
         if (nextToken.type != MasTokenType.NAME) {
             throw this.addError(nextToken, "Expected identifier but found ${nextToken.getTextRepresentation()}")
@@ -281,7 +281,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return nextToken as NameToken
     }
 
-    private fun requireTokenWithText(text:String) : NameToken {
+    private fun requireTokenWithText(text: String): NameToken {
         val nextToken = this.requireIdentifier()
         if (text != nextToken.name) {
             throw this.addError(nextToken, "Expected $text, but found ${nextToken.getTextRepresentation()}")
@@ -290,7 +290,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return nextToken
     }
 
-    private fun requireNewLineOrEof() : MasToken {
+    private fun requireNewLineOrEof(): MasToken {
         val nextToken = this.getNextToken()
         if (nextToken.type != MasTokenType.EOF && nextToken.type != MasTokenType.NEW_LINE) {
             throw this.addError(nextToken, "Expected new line or end of file, but found ${nextToken.getTextRepresentation()}")
@@ -299,7 +299,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return nextToken
     }
 
-    private fun requireString() : StringToken {
+    private fun requireString(): StringToken {
         val nextToken = this.getNextNonNL()
         if (nextToken.type != MasTokenType.STRING) {
             throw this.addError(nextToken, "Expected string, but found ${nextToken.getTextRepresentation()}")
@@ -308,7 +308,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return nextToken as StringToken
     }
 
-    private fun requireTokenOfType(type: MasTokenType) : MasToken {
+    private fun requireTokenOfType(type: MasTokenType): MasToken {
         val nextToken = this.getNextNonNL()
         if (nextToken.type != type) {
             throw this.addError(nextToken, "Expected token of type ${type.name}, but found ${nextToken.getTextRepresentation()}")
@@ -317,23 +317,23 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return nextToken
     }
 
-    private fun getNextNonNL() : MasToken {
-        while(true) {
+    private fun getNextNonNL(): MasToken {
+        while (true) {
             val nextToken = this.getNextToken()
             if (nextToken.type != MasTokenType.NEW_LINE) return nextToken
         }
     }
 
-    private fun countLinesAndGetToken() : TokenLineInfo {
+    private fun countLinesAndGetToken(): TokenLineInfo {
         var linesEncountered = 0
-        while(true) {
+        while (true) {
             val nextToken = this.getNextToken()
             if (nextToken.type != MasTokenType.NEW_LINE) return TokenLineInfo(linesEncountered, nextToken)
             else linesEncountered++
         }
     }
 
-    private fun getNextToken() : MasToken {
+    private fun getNextToken(): MasToken {
         if (this.rolledBackToken != null) {
             val ret = this.rolledBackToken
             this.rolledBackToken = null
@@ -343,19 +343,18 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
     }
 
 
-
     /// THEOREM PARSING
-    private fun parseTheoremExpression(name:String, requireEndOfLine:Boolean) : MathAsmStatement {
+    private fun parseTheoremExpression(name: String, requireEndOfLine: Boolean): MathAsmStatement {
         this.resolveImports()
 
         val baseId = this.requireIdentifier()
         var currentTarget = this.scope.requireStatement(baseId)
 
         // Execute .foo() chain
-        while(true) {
+        while (true) {
             val tokenInfo = this.countLinesAndGetToken()
             if (tokenInfo.token.type != MasTokenType.DOT) {
-                if (requireEndOfLine && tokenInfo.linesBeforeToken < 1  && tokenInfo.token.type != MasTokenType.EOF) {
+                if (requireEndOfLine && tokenInfo.linesBeforeToken < 1 && tokenInfo.token.type != MasTokenType.EOF) {
                     throw this.addError(tokenInfo.token, "End of line expected before ${tokenInfo.token.getTextRepresentation()}")
                 } else {
                     this.rolledBackToken = tokenInfo.token
@@ -369,9 +368,9 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         return currentTarget
     }
 
-    private fun parseTransformation(target:MathAsmStatement, name:String) : MathAsmStatement {
+    private fun parseTransformation(target: MathAsmStatement, name: String): MathAsmStatement {
         val methodName = this.requireIdentifier()
-        when(methodName.name) {
+        when (methodName.name) {
             "all" -> {
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
                 val baseParameter = this.parseTheoremExpression(ANONYMOUS_EXPRESSION_NAME, false)
@@ -400,12 +399,12 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         }
     }
 
-    private fun parseSentenceOrSingleReplacement(target:MathAsmStatement, side:StatementSide, name:String) : MathAsmStatement {
+    private fun parseSentenceOrSingleReplacement(target: MathAsmStatement, side: StatementSide, name: String): MathAsmStatement {
         this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
         val base = this.parseTheoremExpression(ANONYMOUS_EXPRESSION_NAME, false)
 
         val nextToken = this.getNextNonNL()
-        return when(nextToken.type) {
+        return when (nextToken.type) {
             MasTokenType.PARENTHESIS_CLOSE -> {
                 replaceAllInSentence(target, side, base, this.logicSelection, name)
             }
@@ -420,7 +419,7 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         }
     }
 
-    private fun parsePosition() : Int {
+    private fun parsePosition(): Int {
         val token = this.requireTokenOfType(MasTokenType.NUMBER)
         return (token as NumberToken).value
     }
@@ -430,15 +429,16 @@ class ParseScript(reader: Reader, private val stmtRepo: StatementRepository, pri
         if (this.hasResolvedImports) return
 
         val repositoryImports = this.scope.createImportGroup()
-        val result = ResolveImports(this.stmtRepo).resolve(repositoryImports.values, this.symbolMap, this.inspections)
-        result.forEach{(localName, importData) -> this.scope.resolveImport(localName, importData)}
+        val result = ResolveImports(this.stmtRepo, this.theoryId)
+                .resolve(repositoryImports.values, this.symbolMap, this.inspections)
+        result.forEach { (localName, importData) -> this.scope.resolveImport(localName, importData) }
 
         this.hasResolvedImports = true
     }
 
 
     /// ERROR HANDLING
-    private fun addError(token: MasToken, message:String) : MasParserException {
+    private fun addError(token: MasToken, message: String): MasParserException {
         this.inspections.error(token.line, token.column, message)
         return MasParserException("Line ${token.line}_${token.column}: $message")
     }

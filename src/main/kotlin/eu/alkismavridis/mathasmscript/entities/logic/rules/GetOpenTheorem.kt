@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.get_open_theorem
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.MathAsmExpression
 import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement

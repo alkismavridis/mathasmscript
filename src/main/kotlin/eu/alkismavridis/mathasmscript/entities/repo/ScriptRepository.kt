@@ -1,7 +1,6 @@
 package eu.alkismavridis.mathasmscript.entities.repo
 
-import eu.alkismavridis.mathasmscript.usecases.parser.parse_script.ImportId
-
 interface ScriptRepository {
-    fun saveScript(fileName:String, packageName:String, source:String, importIds: List<ImportId>)
+    fun find(scriptName: String, theoryId: Long): MasScript?
+    fun saveScript(script: MasScript, importIds:List<ImportId>)
 }

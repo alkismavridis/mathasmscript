@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.usecases.logic.revert_statement
+package eu.alkismavridis.mathasmscript.entities.logic.rules
 
 import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.IllegalDirectionException

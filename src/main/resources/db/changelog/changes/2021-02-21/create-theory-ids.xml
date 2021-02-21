@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="admin" id="2021-02-21-001">
+        <!-- SETUP THEORY TABLE -->
+        <createTable tableName="THEORY">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="NAME" type="VARCHAR(2000)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="CREATED_AT" type="DATETIME" defaultValue="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <insert tableName="THEORY">
+            <column name="ID">1</column>
+            <column name="NAME">Default Theory</column>
+            <column name="CREATED_AT">NOW()</column>
+        </insert>
+
+
+        <!-- REMOVE CONTRAINTS BOUND TO SCRIPT PK-->
+        <dropForeignKeyConstraint baseTableName="STATEMENT" constraintName="FK_STATEMENT_SCRIPT"/>
+        <dropForeignKeyConstraint baseTableName="SCRIPT_IMPORTS" constraintName="fk_script_imports_script"/>
+
+
+        <!-- UPDATE SCRIPT TABLE: Convert primary key to a combined one -->
+        <dropPrimaryKey tableName="SCRIPT"/>
+        <addColumn tableName="SCRIPT">
+            <column name="THEORY_ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="SCRIPT">
+            <column name="THEORY_ID">1</column>
+        </update>
+        <addForeignKeyConstraint
+                baseTableName="SCRIPT"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_script__theory" />
+        <addPrimaryKey tableName="SCRIPT" columnNames="FILE_NAME, THEORY_ID" />
+
+
+
+        <!-- PACKAGE: Convert unique constraint to a combined one -->
+        <dropUniqueConstraint tableName="PACKAGE" constraintName="CONSTRAINT_F"/>
+        <addColumn tableName="PACKAGE">
+            <column name="THEORY_ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="PACKAGE">
+            <column name="THEORY_ID">1</column>
+        </update>
+        <addForeignKeyConstraint
+                baseTableName="PACKAGE"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_package__theory" />
+        <addUniqueConstraint tableName="PACKAGE" columnNames="THEORY_ID, PATH" />
+
+
+        <!-- STATEMENT: Convert unique constraint to a combined one -->
+        <addColumn tableName="STATEMENT">
+            <column name="THEORY_ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="STATEMENT">
+            <column name="THEORY_ID">1</column>
+        </update>
+        <addForeignKeyConstraint
+                baseTableName="STATEMENT"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_statement__theory" />
+        <addForeignKeyConstraint
+                baseTableName="STATEMENT"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_statements__theory" />
+
+        <!-- SCRIPT_IMPORTS: Convert foreign key to a combined one -->
+        <addColumn tableName="SCRIPT_IMPORTS">
+            <column name="THEORY_ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="SCRIPT_IMPORTS">
+            <column name="THEORY_ID">1</column>
+        </update>
+        <addForeignKeyConstraint
+                baseTableName="SCRIPT_IMPORTS"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_script_imports__theory" />
+
+        <!-- MAS_CHANGE_LOG: Add fk to theory_id-->
+        <addColumn tableName="MAS_CHANGE_LOG">
+            <column name="THEORY_ID" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="MAS_CHANGE_LOG">
+            <column name="THEORY_ID">1</column>
+        </update>
+        <addForeignKeyConstraint
+                baseTableName="MAS_CHANGE_LOG"
+                baseColumnNames="THEORY_ID"
+                referencedTableName="THEORY"
+                referencedColumnNames="ID"
+                constraintName="fk_mas_change_log__theory" />
+    </changeSet>
+</databaseChangeLog>
