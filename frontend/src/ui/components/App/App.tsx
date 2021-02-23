@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.scss';
+import Header from "../reusables/Header/Header";
+import UrlUtils from "../../utils/UrlUtils";
+import HomePage from "../pages/HomePage/HomePage";
+import HttpGraphqlRepository from "../../../io/HttpGraphqlRepository";
+import GraphqlRepository from "../../../entities/GraphqlRepository";
+import TheoryOverviewPage from "../pages/TheoryOverviewPage/TheoryOverviewPage";
+
+
+class DiContext {
+    constructor(public graphqlRepo: GraphqlRepository) {
+    }
+}
+
+const di = new DiContext(
+    new HttpGraphqlRepository("http://localhost:8080/graphql")
+);
+
+const AppContext = React.createContext(di);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header flex-center">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [queryParams] = useState(() => UrlUtils.parseQueryParams(window.location.search));
+
+    return <AppContext.Provider value={di}>
+        <Header/>
+        {renderPageContent(queryParams)}
+    </AppContext.Provider>;
+}
+
+function renderPageContent(queryParams: any) {
+    const pageName = (queryParams.p || "").toLowerCase();
+
+    switch (pageName) {
+        case "": return <HomePage/>;
+        case "theory-overview": return <TheoryOverviewPage theoryId={queryParams.id}/>;
+        default: return <div>404 - Page Not found :(</div>;
+    }
 }
 
 export default App;

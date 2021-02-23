@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class Config {
     @Bean
-    fun graphql(schema:GraphQLSchema) : GraphQL {
+    fun graphql(schema: GraphQLSchema) : GraphQL {
         return GraphQL
                 .newGraphQL(schema)
                 .build()

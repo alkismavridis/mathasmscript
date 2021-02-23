@@ -1,5 +1,15 @@
-.flex-center {
+.app__row-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.app__row-away-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app__page {
+  padding: 16px;
 }

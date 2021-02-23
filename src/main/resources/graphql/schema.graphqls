@@ -9,6 +9,7 @@ type Query {
     theories: [Theory!]!
     execute(theoryId: Long!, script:String!): ParseResult!
     ls(theoryId: Long!, packageName:String!): PackageContent!
+    lsParent(theoryId: Long!, packageName:String!): PackageContent!
     cat(theoryId: Long!, file:String!) : MasScript
 
     dependencies(statementId: Long!) : [FixedMasStatement!]!
@@ -31,6 +32,7 @@ type MasPackage {
     name: String!
     path: String!
     theoryId: Long!
+    id: Long!
 }
 
 type FixedMasStatement {
@@ -39,9 +41,11 @@ type FixedMasStatement {
     text: String!
     type: String!
     theoryId: Long!
+    id: Long!
 }
 
 type PackageContent {
+    packageData: MasPackage!
     statements: [FixedMasStatement!]!
     packages: [MasPackage!]!
 }
