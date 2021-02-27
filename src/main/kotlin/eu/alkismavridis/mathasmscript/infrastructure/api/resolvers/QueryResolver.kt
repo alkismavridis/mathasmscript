@@ -9,8 +9,8 @@ import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageContent
 import eu.alkismavridis.mathasmscript.entities.repo.Theory
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbTheoryRepository
+import eu.alkismavridis.mathasmscript.usecases.names.getPackageNameOf
 import eu.alkismavridis.mathasmscript.usecases.parser.execute_script.ExecuteScript
-import eu.alkismavridis.mathasmscript.usecases.parser.get_parent_package.GetParentPackage
 import eu.alkismavridis.mathasmscript.usecases.repo.getPackageContent
 import graphql.kickstart.tools.GraphQLQueryResolver
 import org.springframework.stereotype.Component
@@ -31,7 +31,7 @@ class QueryResolver(
     }
 
     fun lsParent(theoryId: Long, packageName: String): PackageContent {
-        val parentName = GetParentPackage.get(packageName)
+        val parentName = getPackageNameOf(packageName)
         return getPackageContent(theoryId, parentName, this.packageRepo, this.stmtRepo)
     }
 

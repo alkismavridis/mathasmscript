@@ -30,7 +30,9 @@ dependencies {
 
 	// GRAPHQL
 	implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.1")
+	implementation("com.graphql-java-kickstart:graphql-java-tools:6.0.2")
 	implementation("com.graphql-java:graphiql-spring-boot-starter:5.0.2")
+	implementation("com.graphql-java:graphql-java-extended-scalars:1.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

@@ -10,13 +10,12 @@ import eu.alkismavridis.mathasmscript.entities.repo.ImportId
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.usecases.parser.parse_statement_string.ParseStatementString
 import eu.alkismavridis.mathasmscript.usecases.parser.read_token.MasTokenizer
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_package_part_name.ValidatePackagePartName
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_theorem_name.ValidateStatementName
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAll
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAllInSentence
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceSingleMatch
 import eu.alkismavridis.mathasmscript.entities.logic.rules.revertStatement
 import eu.alkismavridis.mathasmscript.entities.logic.rules.startTheorem
+import eu.alkismavridis.mathasmscript.usecases.names.validations.*
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolveImports
 import java.io.Reader
 import java.io.StringReader
@@ -108,8 +107,8 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
     private fun readPackageName(requireEndOfLine: Boolean): String {
         val firstPackagePart = this.requireIdentifier()
-        if (!ValidatePackagePartName.isPackagePartNameValid(firstPackagePart.name)) {
-            throw this.addError(firstPackagePart, ValidatePackagePartName.ERROR_MESSAGE)
+        if (!isPackageNameValid(firstPackagePart.name)) {
+            throw this.addError(firstPackagePart, PACKAGE_NAME_ERROR_MESSAGE)
         }
         val builder = StringBuilder(firstPackagePart.name)
 
@@ -119,8 +118,8 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
                 break
             } else if (nextToken.type == MasTokenType.DOT) {
                 val nextPackagePart = this.requireIdentifier()
-                if (!ValidatePackagePartName.isPackagePartNameValid(nextPackagePart.name)) {
-                    throw this.addError(nextPackagePart, ValidatePackagePartName.ERROR_MESSAGE)
+                if (!isPackageNameValid(nextPackagePart.name)) {
+                    throw this.addError(nextPackagePart, PACKAGE_NAME_ERROR_MESSAGE)
                 }
                 builder.append(".").append(nextPackagePart.name)
                 continue
@@ -235,8 +234,8 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         this.resolveImports()
 
         val nameToken = this.requireIdentifier()
-        if (!ValidateStatementName.isAxiomNameValid(nameToken.name)) {
-            throw this.addError(nameToken, ValidateStatementName.INVALID_AXIOM_MESSAGE)
+        if (!isAxiomNameValid(nameToken.name)) {
+            throw this.addError(nameToken, INVALID_AXIOM_NAME_MESSAGE)
         }
         this.requireTokenOfType(MasTokenType.EQUALS)
         val axiomStringToken = this.requireString()
@@ -252,8 +251,8 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         }
 
         val nameToken = this.requireIdentifier()
-        if (!ValidateStatementName.isTheoremNameValid(nameToken.name)) {
-            throw this.addError(nameToken, ValidateStatementName.INVALID_THEOREM_MESSAGE)
+        if (!isTheoremNameValid(nameToken.name)) {
+            throw this.addError(nameToken, INVALID_THEOREM_NAME_MESSAGE)
         }
 
         val nextToken = this.getNextNonNL()

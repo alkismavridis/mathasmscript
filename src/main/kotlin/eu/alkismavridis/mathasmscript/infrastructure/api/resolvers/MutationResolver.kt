@@ -3,6 +3,8 @@ package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.*
 import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
 import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.repo.MasPackage
+import eu.alkismavridis.mathasmscript.usecases.parser.createPackageUseCase
 import eu.alkismavridis.mathasmscript.usecases.repo.ImportScript
 import eu.alkismavridis.mathasmscript.usecases.repo.moveStatement
 import graphql.kickstart.tools.GraphQLMutationResolver
@@ -18,6 +20,10 @@ class MutationResolver(
 ) : GraphQLMutationResolver {
     fun commit(theoryId: Long, script: String): ParseResult {
         return ImportScript(theoryId, this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
+    }
+
+    fun createPackage(name: String, parentPath: String, theoryId: Long) : MasPackage {
+        return createPackageUseCase(parentPath, name, theoryId, this.packageRepo)
     }
 
     fun mvPackage(theoryId: Long, currentPath:String, newPath:String) {

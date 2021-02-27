@@ -29,7 +29,7 @@ fun getOrCreatePackage(theoryId: Long, path:String, createdAt: Instant, repo:Pac
         log.info("Package {} was created with id {}", newPackage.path, newPackage.id)
     }
 
-    return existingParents[path] ?: throw MathAsmException("Internal error: could not save package ${path}")
+    return existingParents[path] ?: throw MathAsmException("Internal error: could not save package $path")
 }
 
 

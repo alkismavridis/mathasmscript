@@ -5,10 +5,9 @@ import eu.alkismavridis.mathasmscript.entities.logic.StatementType
 import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.usecases.parser.get_parent_package.GetParentPackage
-import eu.alkismavridis.mathasmscript.usecases.parser.get_simple_name.GetSimpleName
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_package_part_name.ValidatePackagePartName
-import eu.alkismavridis.mathasmscript.usecases.parser.validate_theorem_name.ValidateStatementName
+import eu.alkismavridis.mathasmscript.usecases.names.getPackageNameOf
+import eu.alkismavridis.mathasmscript.usecases.names.getSimpleNameOf
+import eu.alkismavridis.mathasmscript.usecases.names.validations.*
 import java.time.Instant
 
 fun moveStatement(theoryId: Long, currentPath:String, newPath:String, stmtRepo:StatementRepository, packageRepo:PackageRepository) : FixedMasStatement {
@@ -16,8 +15,8 @@ fun moveStatement(theoryId: Long, currentPath:String, newPath:String, stmtRepo:S
             ?: throw MathAsmException("Statement with path $currentPath not foundtheoryId.")
     if (currentPath == newPath) return currentStatement
 
-    val newPackageName = GetParentPackage.get(newPath)
-    validateNewName(currentStatement, newPackageName, GetSimpleName.get(newPath))
+    val newPackageName = getPackageNameOf(newPath)
+    validateNewName(currentStatement, newPackageName, getSimpleNameOf(newPath))
 
     val targetPackage = getOrCreatePackage(theoryId, newPackageName, Instant.now(), packageRepo)
     val newStatement = FixedMasStatement(
@@ -36,19 +35,10 @@ fun moveStatement(theoryId: Long, currentPath:String, newPath:String, stmtRepo:S
 
 private fun validateNewName(currentStatement: FixedMasStatement, newPackageName:String, newStatementName:String) {
     if (currentStatement.type == StatementType.AXIOM) {
-        if (!ValidateStatementName.isAxiomNameValid(newStatementName)) {
-            throw MathAsmException(ValidateStatementName.INVALID_AXIOM_MESSAGE)
-        }
+        assertAxiomNameValid(newStatementName)
     } else {
-        if (!ValidateStatementName.isTheoremNameValid(newStatementName)) {
-            throw MathAsmException(ValidateStatementName.INVALID_THEOREM_MESSAGE)
-        }
+        assertTheoremNameValid(newStatementName)
     }
 
-    val newPackageNameParts = newPackageName.split('.')
-    newPackageNameParts.forEach {
-        if (!ValidatePackagePartName.isPackagePartNameValid(it)) {
-            throw MathAsmException(ValidatePackagePartName.ERROR_MESSAGE)
-        }
-    }
+    assertPackagePathValid(newPackageName)
 }

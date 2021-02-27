@@ -18,6 +18,7 @@ type Query {
 type Mutation {
     commit(theoryId: Long!, script:String!): ParseResult!
     mvStatement(theoryId: Long!, currentPath:String!, newPath:String!) : FixedMasStatement
+    createPackage(name: String!, parentPath: String!, theoryId: Long!) : MasPackage!
 
     # mvPackage
     # deleteStatement

@@ -3,11 +3,17 @@
 }
 
 .package-explorer__stmt {
-  color: green;
   margin: 8px;
+  padding: 8px;
+  background: cyan;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .package-explorer__package {
-  color: orange;
   margin: 8px;
+  padding: 8px;
+  background: orange;
+  border-radius: 8px;
+  cursor: pointer;
 }

@@ -2,6 +2,10 @@ import React, {useContext, useEffect, useState} from "react";
 import PackageContent from "../../../../entities/model/PackageContent";
 import {GraphqlContext} from "../../../utils/DiContext";
 
+import "./PackageExplorer.scss";
+import addNewPackage from "../../../../actions/AddNewPackage";
+import getFirstMessageOf from "../../../../actions/GetFirstMessageOfErrors";
+
 interface Props {
     theoryId: number,
     onPackageChanged: (p: PackageContent) => void
@@ -21,19 +25,21 @@ export default function PackageExplorer(props: Props) {
             value={inputTextValue}
             onChange={el => setInputTextValue(el.target.value)}/>
         <button onClick={() => fetchPackage(inputTextValue)}>Go</button>
+        <button onClick={createNewPackage}>New package</button>
 
         {currentPackage && <>
           <div>
-            <button
-              onClick={() => fetchParent(currentPackage.packageData.path)}
-              className="app__shy-button package-explorer__package">
-              ..
-            </button>
+              {currentPackage.packageData.path && <button
+                  onClick={() => fetchParent(currentPackage.packageData.path)}
+                  className="app__shy-button package-explorer__package">
+                  ..
+                </button>
+              }
             {currentPackage.packages.map(p => <button
               key={p.id}
               onClick={() => fetchPackage(p.path)}
               className="app__shy-button package-explorer__package">
-              {p.path}
+              {p.name}
             </button>)}
           </div>
           <div>
@@ -42,7 +48,7 @@ export default function PackageExplorer(props: Props) {
                   title={s.text}
                   onClick={() => window.alert("You clicked statement " + s.path + " ---\n " + s.text)}
                   className="app__shy-button package-explorer__stmt">
-                  {s.path}
+                  {s.name}
               </button>)}
           </div>
         </>}
@@ -66,6 +72,19 @@ export default function PackageExplorer(props: Props) {
                 props.onPackageChanged(q.lsParent);
             });
     }
+
+    function createNewPackage() {
+        const packageName = window.prompt('New package name...');
+        if (!packageName) return;
+
+        graphql.mutation(CREATE_PACKAGE_MUTATION, {
+            theoryId: props.theoryId,
+            name: packageName,
+            parentPath: currentPackage.packageData.path
+        })
+            .then(m => setCurrentPackage(addNewPackage(m.createPackage, currentPackage)))
+            .catch(errors => window.alert(getFirstMessageOf(errors)));
+    }
 }
 
 const FETCH_PACKAGE = `
@@ -84,6 +103,14 @@ const FETCH_PARENT = `
             packageData { id, name, path }
             statements {id, name, path, text}
             packages{id, name, path}
+        }
+    }
+`;
+
+const CREATE_PACKAGE_MUTATION = `
+    mutation($theoryId: Long!, $name: String!, $parentPath: String!) {
+        createPackage(name: $name, parentPath: $parentPath, theoryId: $theoryId) {
+            id, name, path
         }
     }
 `;
