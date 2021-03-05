@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.usecases.repo
 
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
-import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.entities.repo.ScriptRepository
@@ -35,17 +35,19 @@ class ImportScript(
 
             return ParseResult(
                     !inspections.hasErrors(),
-                    result.packageName,
                     scriptName,
-                    result.exportedStatements,
+                    result.packageName,
+                    result.imports,
+                    result.exports,
                     inspections.getEntries()
             )
         } catch (e: Throwable) {
             log.error("Error while importing script> {}", e.message)
             return ParseResult(
                     false,
-                    packageName,
                     scriptName,
+                    packageName,
+                    emptyList(),
                     emptyList(),
                     inspections.getEntries()
             )
@@ -55,24 +57,24 @@ class ImportScript(
     private fun saveResult(result: MasParserResult, scriptName: String, scriptText: String) {
         val creationDate = Instant.now()
         val packageToSave = getOrCreatePackage(this.theoryId, result.packageName, creationDate, this.packageRepo)
-        result.exportedStatements.forEach{ it.packageId = packageToSave.id }
+        result.exports.forEach{ it.packageId = packageToSave.id }
 
         log.info("Saving script {}", scriptName)
         val script = MasScript(this.theoryId, scriptText, scriptName, Instant.now())
-        this.scriptRepo.saveScript(script, result.importedIds)
+        this.scriptRepo.saveScript(script, result.imports)
 
-        log.info("Importing {} statements for script {}", result.exportedStatements.size, result.packageName)
-        this.stmtRepo.saveAll(ArrayList(result.exportedStatements), scriptName, creationDate)
+        log.info("Importing {} statements for script {}", result.exports.size, result.packageName)
+        this.stmtRepo.saveAll(ArrayList(result.exports), scriptName, creationDate)
     }
 
     private fun assertResultValidity(result: MasParserResult, inspections: MathasmInspections) {
-        if (result.exportedStatements.isEmpty()) {
+        if (result.exports.isEmpty()) {
             val errorMessage = "Script does not export anything. Aborting import process."
             inspections.error(errorMessage)
             throw MathAsmException(errorMessage)
         }
 
-        AssertStatementsNotExisting.check(this.theoryId, result.exportedStatements, this.stmtRepo, inspections)
+        AssertStatementsNotExisting.check(this.theoryId, result.exports, this.stmtRepo, inspections)
     }
 
     companion object {

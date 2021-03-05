@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.*
-import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasPackage
 import eu.alkismavridis.mathasmscript.usecases.parser.createPackageUseCase
 import eu.alkismavridis.mathasmscript.usecases.repo.ImportScript

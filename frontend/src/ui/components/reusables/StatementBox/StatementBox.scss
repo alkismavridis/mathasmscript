@@ -1,0 +1,12 @@
+.statement-box {
+  margin: 8px;
+  padding: 8px;
+  background: linear-gradient(45deg, #d45080e8, #8b3b511f);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+
+  &[data-type="THEOREM"] {
+    background: linear-gradient(45deg, #50d460c7, #7deed8b0);
+  }
+}

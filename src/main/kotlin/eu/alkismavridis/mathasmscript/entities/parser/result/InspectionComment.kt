@@ -1,8 +1,4 @@
-package eu.alkismavridis.mathasmscript.entities.parser
-
-enum class InspectionType {
-    ERROR, WARNING, INFO, DEBUG
-}
+package eu.alkismavridis.mathasmscript.entities.parser.result
 
 class InspectionComment(
         val line:Int,

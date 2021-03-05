@@ -6,6 +6,7 @@ import HomePage from "../pages/HomePage/HomePage";
 import HttpGraphqlRepository from "../../../io/HttpGraphqlRepository";
 import GraphqlRepository from "../../../entities/GraphqlRepository";
 import TheoryOverviewPage from "../pages/TheoryOverviewPage/TheoryOverviewPage";
+import ScriptCreationPage from "../pages/ScriptCreationPage/ScriptCreationPage";
 
 
 class DiContext {
@@ -34,6 +35,7 @@ function renderPageContent(queryParams: any) {
     switch (pageName) {
         case "": return <HomePage/>;
         case "theory-overview": return <TheoryOverviewPage theoryId={queryParams.id}/>;
+        case "create-script": return <ScriptCreationPage theoryId={queryParams.id}/>;
         default: return <div>404 - Page Not found :(</div>;
     }
 }

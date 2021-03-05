@@ -5,6 +5,7 @@ import {GraphqlContext} from "../../../utils/DiContext";
 import "./PackageExplorer.scss";
 import addNewPackage from "../../../../actions/AddNewPackage";
 import getFirstMessageOf from "../../../../actions/GetFirstMessageOfErrors";
+import StatementBox from "../StatementBox/StatementBox";
 
 interface Props {
     theoryId: number,
@@ -26,6 +27,7 @@ export default function PackageExplorer(props: Props) {
             onChange={el => setInputTextValue(el.target.value)}/>
         <button onClick={() => fetchPackage(inputTextValue)}>Go</button>
         <button onClick={createNewPackage}>New package</button>
+        <button onClick={createNewScript}>New Script</button>
 
         {currentPackage && <>
           <div>
@@ -43,13 +45,7 @@ export default function PackageExplorer(props: Props) {
             </button>)}
           </div>
           <div>
-              {currentPackage.statements.map(s => <button
-                  key={s.id}
-                  title={s.text}
-                  onClick={() => window.alert("You clicked statement " + s.path + " ---\n " + s.text)}
-                  className="app__shy-button package-explorer__stmt">
-                  {s.name}
-              </button>)}
+              {currentPackage.statements.map(s => <StatementBox key={s.id} stmt={s} />)}
           </div>
         </>}
     </section>;
@@ -85,13 +81,17 @@ export default function PackageExplorer(props: Props) {
             .then(m => setCurrentPackage(addNewPackage(m.createPackage, currentPackage)))
             .catch(errors => window.alert(getFirstMessageOf(errors)));
     }
+
+    function createNewScript() {
+        window.location.href = "/?p=create-script&id=" + props.theoryId
+    }
 }
 
 const FETCH_PACKAGE = `
     query($theoryId: Long!, $packageName:String!) {
         ls(theoryId: $theoryId, packageName:$packageName) {
             packageData { id, name, path }
-            statements {id, name, path, text}
+            statements {id, name, path, text, type}
             packages{id, name, path}
         }
     }
@@ -101,7 +101,7 @@ const FETCH_PARENT = `
     query($theoryId: Long!, $packageName:String!) {
         lsParent(theoryId: $theoryId, packageName:$packageName) {
             packageData { id, name, path }
-            statements {id, name, path, text}
+            statements {id, name, path, text, type}
             packages{id, name, path}
         }
     }

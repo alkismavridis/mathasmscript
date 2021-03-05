@@ -61,8 +61,15 @@ type ParseResult {
     success: Boolean
     packageName: String
     scriptName: String
-    exportedStatements: [FixedMasStatement!]!
+    exports: [FixedMasStatement!]!
     comments: [InspectionComment!]!
+    imports: [MasImport!]!
+}
+
+type MasImport {
+    internalName: String
+    importUrl: String
+    statement: FixedMasStatement
 }
 
 type InspectionComment {

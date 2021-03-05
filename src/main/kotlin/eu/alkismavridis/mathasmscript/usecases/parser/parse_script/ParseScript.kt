@@ -1,20 +1,19 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.parser.SymbolMap
 import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.rules.stabilizeOpenTheorem
 import eu.alkismavridis.mathasmscript.entities.parser.*
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
-import eu.alkismavridis.mathasmscript.entities.repo.ImportId
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.usecases.parser.parse_statement_string.ParseStatementString
 import eu.alkismavridis.mathasmscript.usecases.parser.read_token.MasTokenizer
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAll
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAllInSentence
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceSingleMatch
 import eu.alkismavridis.mathasmscript.entities.logic.rules.revertStatement
 import eu.alkismavridis.mathasmscript.entities.logic.rules.startTheorem
+import eu.alkismavridis.mathasmscript.entities.parser.result.MasImport
 import eu.alkismavridis.mathasmscript.usecases.names.validations.*
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolveImports
 import java.io.Reader
@@ -24,17 +23,13 @@ import java.lang.StringBuilder
 
 class MasParserResult(
         val packageName: String,
-        val exportedStatements: Collection<FixedMasStatement>,
-        val importedIds: List<ImportId>
+        val imports: Collection<MasImport>,
+        val exports: Collection<FixedMasStatement>
 )
 
 private class TokenLineInfo(val linesBeforeToken: Int, val token: MasToken)
 
 class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
-    companion object {
-        const val ANONYMOUS_EXPRESSION_NAME = "AnonymousExpression"
-    }
-
     private val tokenizer = MasTokenizer(reader, this.inspections)
 
     /** Import statements are allowed before any proof or axiom definitions */
@@ -50,23 +45,28 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
     /// STATEMENT PARSING
     fun run(): MasParserResult {
-        while (this.parseNextStatement()) { /* continue parsing until we hit the end */
-        }
+        while (this.parseNextStatement()) { /* continue parsing until we hit the end */ }
         this.scope.assertAllImportsAreUsed()
 
         return MasParserResult(
                 this.packageName,
+                this.scope.getImports().map {
+                    MasImport(
+                            it.first,
+                            it.second.externalUrl,
+                            it.second.fixesStatement
+                    )
+                }.toList(),
                 this.scope.getExportableStatements().map {
                     FixedMasStatement(
-                            "${this.packageName}.${it.name}",
-                            -1L,
-                            it.type,
-                            this.symbolMap.toString(it),
-                            this.theoryId,
-                            -1L
+                            path = "${this.packageName}.${it.name}",
+                            packageId = -1L,
+                            type = it.type,
+                            text = this.symbolMap.toString(it),
+                            theoryId = this.theoryId,
+                            id = -1L
                     )
-                },
-                this.scope.getImportIds()
+                }
         )
     }
 
@@ -440,5 +440,9 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
     private fun addError(token: MasToken, message: String): MasParserException {
         this.inspections.error(token.line, token.column, message)
         return MasParserException("Line ${token.line}_${token.column}: $message")
+    }
+
+    companion object {
+        private const val ANONYMOUS_EXPRESSION_NAME = "AnonymousExpression"
     }
 }

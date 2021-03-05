@@ -1,5 +1,6 @@
 package eu.alkismavridis.mathasmscript.entities.repo
 
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import java.time.Instant
 
 interface StatementRepository {
@@ -11,5 +12,5 @@ interface StatementRepository {
     fun findDependenciesOf(statementId: Long) : List<FixedMasStatement>
 
     fun saveAll(statements:List<FixedMasStatement>, scriptName: String, creationDate: Instant)
-    fun update(statement:FixedMasStatement, previousName: String)
+    fun update(statement: FixedMasStatement, previousName: String)
 }

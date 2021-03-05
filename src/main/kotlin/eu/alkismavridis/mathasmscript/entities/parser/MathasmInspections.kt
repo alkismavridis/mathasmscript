@@ -1,9 +1,15 @@
 package eu.alkismavridis.mathasmscript.entities.parser
 
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.entities.parser.result.InspectionComment
+import eu.alkismavridis.mathasmscript.entities.parser.result.InspectionType
 
 class MathasmInspections {
     private val comments = mutableListOf<InspectionComment>()
+
+    fun appError(message:String) {
+        this.comments.add(InspectionComment(-1, -1, message, InspectionType.APP_ERROR))
+    }
 
     fun error(message:String) {
         this.comments.add(InspectionComment(-1, -1, message, InspectionType.ERROR))

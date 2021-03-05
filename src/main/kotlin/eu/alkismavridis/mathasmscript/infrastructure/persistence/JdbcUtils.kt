@@ -31,7 +31,7 @@ interface SetManager<T> {
 
 class JdbcUtils {
     companion object {
-        fun <T> saveBatch(data: List<T>, manager: SetManager<T>, jdbcTemplate: JdbcTemplate) {
+        fun <T> saveBatch(data: Collection<T>, manager: SetManager<T>, jdbcTemplate: JdbcTemplate) {
             if (data.isEmpty()) return
 
             jdbcTemplate.execute(ConnectionCallback {conn ->

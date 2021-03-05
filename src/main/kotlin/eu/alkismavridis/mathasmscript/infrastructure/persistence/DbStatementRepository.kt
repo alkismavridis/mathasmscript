@@ -1,11 +1,10 @@
 package eu.alkismavridis.mathasmscript.infrastructure.persistence
 
 import eu.alkismavridis.mathasmscript.entities.logic.StatementType
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.PreparedStatement
@@ -29,7 +28,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         params["theoryId"] = theoryId
 
         return this.namedJdbcTemplate.query(
-                "SELECT PATH FROM STATEMENT WHERE THEORY_ID = :theoryId PATH IN (:fullNames) LIMIT ${fullNames.size}",
+                "SELECT PATH FROM STATEMENT WHERE THEORY_ID = :theoryId AND PATH IN (:fullNames) LIMIT ${fullNames.size}",
                 params
         ) { rs, _ -> rs.getString("PATH") }
     }
@@ -40,7 +39,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         params["theoryId"] = theoryId
 
         return this.namedJdbcTemplate.query(
-                "SELECT $COLUMNS_FOR_FETCHING FROM STATEMENT WHERE THEORY_ID = :theoryId PATH IN (:fullNames) LIMIT ${fullNames.size}",
+                "SELECT $COLUMNS_FOR_FETCHING FROM STATEMENT WHERE THEORY_ID = :theoryId AND PATH IN (:fullNames) LIMIT ${fullNames.size}",
                 params
         ) { rs, _ -> this.map(rs) }
     }
@@ -69,7 +68,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         JdbcUtils.saveBatch(statements, StatementSetManager(scriptName, creationDate), this.jdbcTemplate)
     }
 
-    override fun update(statement:FixedMasStatement, previousName: String) {
+    override fun update(statement: FixedMasStatement, previousName: String) {
         log.info("Moving statement {} to {}", previousName, statement.path)
 
         this.jdbcTemplate.update(

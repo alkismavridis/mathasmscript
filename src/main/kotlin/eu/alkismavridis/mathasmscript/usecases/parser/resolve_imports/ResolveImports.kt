@@ -6,15 +6,15 @@ import eu.alkismavridis.mathasmscript.entities.parser.NameToken
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.usecases.parser.parse_statement_string.ParseStatementString
+import eu.alkismavridis.mathasmscript.usecases.parser.parse_script.ParseStatementString
 import java.io.StringReader
 import java.util.stream.Collectors
 
 class ResolvedImport(
         val statement: MathAsmStatement,
-        val internalId: Long,
+        val fixesStatement: FixedMasStatement,
         val externalUrl: String
 )
 
@@ -45,7 +45,7 @@ class ResolveImports(private val repository: StatementRepository, private val th
             }
 
             val toStatement = ParseStatementString(StringReader(it.text), map, localName.name, it.type, '\u0000').parse()
-            result[localName] = ResolvedImport(toStatement, it.id, "")
+            result[localName] = ResolvedImport(toStatement, it, "")
         }
 
         this.assertAllImportsArePresent(fromDb, repositoryImports, parseLogger)

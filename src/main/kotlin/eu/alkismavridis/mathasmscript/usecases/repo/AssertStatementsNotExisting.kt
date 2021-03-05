@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.usecases.repo
 
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository

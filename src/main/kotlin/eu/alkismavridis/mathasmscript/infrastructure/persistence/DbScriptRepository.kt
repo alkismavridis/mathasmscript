@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.infrastructure.persistence
 
-import eu.alkismavridis.mathasmscript.entities.repo.ImportId
+import eu.alkismavridis.mathasmscript.entities.parser.result.MasImport
 import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.ScriptRepository
 import org.springframework.jdbc.core.JdbcTemplate
@@ -13,7 +13,7 @@ import java.sql.Timestamp
 
 @Component
 class DbScriptRepository(val jdbcTemplate: JdbcTemplate) : ScriptRepository {
-    override fun saveScript(script: MasScript, importIds:List<ImportId>) {
+    override fun saveScript(script: MasScript, importIds: Collection<MasImport>) {
         this.jdbcTemplate.update{con ->
             val ps = con.prepareStatement(INSERT_STATEMENT)
             this.prepareStatement(script, ps)
@@ -56,17 +56,17 @@ class DbScriptRepository(val jdbcTemplate: JdbcTemplate) : ScriptRepository {
     }
 }
 
-private class ScriptImportSetManager(val scriptName:String, val theoryId: Long) : SetManager<ImportId> {
+private class ScriptImportSetManager(val scriptName:String, val theoryId: Long) : SetManager<MasImport> {
     override fun getInsertStatement() = "INSERT INTO SCRIPT_IMPORTS (THEORY_ID, SCRIPT_NAME, INTERNAL_STATEMENT_ID, EXTERNAL_STATEMENT_ID) VALUES (?, ?, ?, ?)"
 
-    override fun populateParameters(value: ImportId, ps: PreparedStatement) {
+    override fun populateParameters(value: MasImport, ps: PreparedStatement) {
         ps.setLong(1, this.theoryId)
         ps.setString(2, this.scriptName)
-        JdbcUtils.setIdOrNull(3, value.internalId, ps)
-        ps.setString(4, value.externalId)
+        JdbcUtils.setIdOrNull(3, value.statement.id, ps)
+        ps.setString(4, value.importUrl) // TODO EXTERNAL_STATEMENT_ID ---> EXTERNAL_URL
     }
 
-    override fun setGeneratedValues(entity: ImportId, keys: ResultSet) {
+    override fun setGeneratedValues(entity: MasImport, keys: ResultSet) {
         // Nothing to be done
     }
 }

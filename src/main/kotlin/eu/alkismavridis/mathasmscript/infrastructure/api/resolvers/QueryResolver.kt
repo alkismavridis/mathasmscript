@@ -3,8 +3,8 @@ package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbPackageRepository
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbScriptRepository
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbStatementRepository
-import eu.alkismavridis.mathasmscript.entities.parser.ParseResult
-import eu.alkismavridis.mathasmscript.entities.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageContent
 import eu.alkismavridis.mathasmscript.entities.repo.Theory

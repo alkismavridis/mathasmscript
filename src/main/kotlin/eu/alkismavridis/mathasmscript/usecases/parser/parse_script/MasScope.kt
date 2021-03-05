@@ -5,7 +5,6 @@ import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
 import eu.alkismavridis.mathasmscript.entities.parser.MasRepositoryImports
 import eu.alkismavridis.mathasmscript.entities.parser.NameToken
-import eu.alkismavridis.mathasmscript.entities.repo.ImportId
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolvedImport
 
 class ScopeException(message:String) : MathAsmException(message)
@@ -75,13 +74,6 @@ class MasScope(private val parent: MasScope?, private val logger: MathasmInspect
                 .map{ it.getStatement(this.logger) }
     }
 
-    fun getImportIds(): List<ImportId> {
-        return this.declarations
-                .values
-                .filter { it is ImportDeclaration && it.importData != null }
-                .map{ ImportId((it as ImportDeclaration).importData!!.internalId, it.importData!!.externalUrl) }
-    }
-
     fun resolveImport(localName: NameToken, importData: ResolvedImport) {
         val symbol = this.findSymbol(localName)
         if (symbol !is ImportDeclaration) {
@@ -99,6 +91,16 @@ class MasScope(private val parent: MasScope?, private val logger: MathasmInspect
                 it.assertUsed(this.logger)
             }
         }
+    }
+
+    fun getImports() : Sequence<Pair<String, ResolvedImport>> {
+        return this.declarations
+                .asSequence()
+                .mapNotNull{
+                    val value = it.value as? ImportDeclaration ?: return@mapNotNull null
+                    val importData = value.importData ?: return@mapNotNull null
+                    return@mapNotNull it.key to importData
+                }
     }
 }
 
@@ -149,3 +151,8 @@ private class ImportDeclaration(val repoUrl:String, val fullName:String, localNa
         }
     }
 }
+
+private class ImportId(
+        val internalId:Long,
+        val externalId:String
+)
