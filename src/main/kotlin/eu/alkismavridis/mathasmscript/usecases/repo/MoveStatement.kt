@@ -12,7 +12,7 @@ import java.time.Instant
 
 fun moveStatement(theoryId: Long, currentPath:String, newPath:String, stmtRepo:StatementRepository, packageRepo:PackageRepository) : FixedMasStatement {
     val currentStatement = stmtRepo.findByPath(currentPath, theoryId)
-            ?: throw MathAsmException("Statement with path $currentPath not foundtheoryId.")
+            ?: throw MathAsmException("Statement with path $currentPath not found in theory  $theoryId.")
     if (currentPath == newPath) return currentStatement
 
     val newPackageName = getPackageNameOf(newPath)

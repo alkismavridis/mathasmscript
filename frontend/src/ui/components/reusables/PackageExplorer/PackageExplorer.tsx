@@ -27,6 +27,7 @@ export default function PackageExplorer(props: Props) {
             onChange={el => setInputTextValue(el.target.value)}/>
         <button onClick={() => fetchPackage(inputTextValue)}>Go</button>
         <button onClick={createNewPackage}>New package</button>
+        <button onClick={deletePackage}>Delete package</button>
         <button onClick={createNewScript}>New Script</button>
 
         {currentPackage && <>
@@ -78,8 +79,17 @@ export default function PackageExplorer(props: Props) {
             name: packageName,
             parentPath: currentPackage.packageData.path
         })
-            .then(m => setCurrentPackage(addNewPackage(m.createPackage, currentPackage)))
+            .then(m => setCurrentPackage(addNewPackage(m.mkdir, currentPackage)))
             .catch(errors => window.alert(getFirstMessageOf(errors)));
+    }
+
+    function deletePackage() {
+        graphql.mutation(DELETE_PACKAGE_MUTATION, {
+            theoryId: props.theoryId,
+            path: currentPackage.packageData.path,
+        })
+            .then(() => fetchParent(currentPackage.packageData.path))
+            .catch(errors => window.alert(getFirstMessageOf(errors)))
     }
 
     function createNewScript() {
@@ -109,8 +119,14 @@ const FETCH_PARENT = `
 
 const CREATE_PACKAGE_MUTATION = `
     mutation($theoryId: Long!, $name: String!, $parentPath: String!) {
-        createPackage(name: $name, parentPath: $parentPath, theoryId: $theoryId) {
+        mkdir(name: $name, parentPath: $parentPath, theoryId: $theoryId) {
             id, name, path
         }
+    }
+`;
+
+const DELETE_PACKAGE_MUTATION = `
+    mutation($theoryId: Long!, $path: String!) {
+        rmdir(path: $path, theoryId: $theoryId)
     }
 `;

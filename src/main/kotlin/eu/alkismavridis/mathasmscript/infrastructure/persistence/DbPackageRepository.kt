@@ -49,6 +49,26 @@ class DbPackageRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplate:
         JdbcUtils.saveBatch(packages, PackageSetManager(), this.jdbcTemplate)
     }
 
+    override fun existsByParent(path: String, theoryId: Long): Boolean {
+        val pattern = if (path.isEmpty()) "%" else "$path.%"
+
+        return this.jdbcTemplate.query(
+                "SELECT ID FROM PACKAGE WHERE THEORY_ID = ? AND PATH LIKE ? LIMIT 1",
+                arrayOf(theoryId, pattern),
+                ResultSetExtractor { rs -> rs.next() }
+        ) ?: false
+    }
+
+    override fun delete(path: String, theoryId: Long): Boolean {
+        val rowsAffected = this.jdbcTemplate.update(
+                "DELETE FROM PACKAGE WHERE THEORY_ID = ? AND PATH = ? LIMIT 1",
+                theoryId,
+                path
+        )
+
+        return rowsAffected > 0
+    }
+
     private fun map(rs: ResultSet) : MasPackage? {
         if (rs.isClosed) return null
 

@@ -5,6 +5,7 @@ import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.ResultSetExtractor
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.PreparedStatement
@@ -22,7 +23,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
             statementsToUpdate[0]
     }
 
-    override fun findExistingNames(fullNames:Collection<String>, theoryId: Long) : List<String> {
+    override fun findExistingNames(fullNames: Collection<String>, theoryId: Long): List<String> {
         val params: MutableMap<String, Any> = HashMap()
         params["fullNames"] = fullNames
         params["theoryId"] = theoryId
@@ -33,7 +34,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         ) { rs, _ -> rs.getString("PATH") }
     }
 
-    override fun findAll(fullNames:Collection<String>, theoryId: Long) : List<FixedMasStatement> {
+    override fun findAll(fullNames: Collection<String>, theoryId: Long): List<FixedMasStatement> {
         val params: MutableMap<String, Any> = HashMap()
         params["fullNames"] = fullNames
         params["theoryId"] = theoryId
@@ -44,27 +45,37 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         ) { rs, _ -> this.map(rs) }
     }
 
-    override fun findDependenciesOf(statementId: Long) : List<FixedMasStatement> {
+    override fun findDependenciesOf(statementId: Long): List<FixedMasStatement> {
         return this.jdbcTemplate.query(
                 "SELECT * FROM STATEMENT WHERE SCRIPT IN (" +
                         "SELECT SCRIPT_NAME FROM SCRIPT_IMPORTS  WHERE INTERNAL_STATEMENT_ID = ?" +
-                    ")",
+                        ")",
                 arrayOf(statementId)
         ) { rs, _ -> this.map(rs) }
+    }
+
+    override fun hasDependencies(statementId: Long): Boolean {
+        return this.jdbcTemplate.query(
+                "SELECT ID FROM STATEMENT WHERE SCRIPT IN (" +
+                        "SELECT SCRIPT_NAME FROM SCRIPT_IMPORTS  WHERE INTERNAL_STATEMENT_ID = ?" +
+                        ") LIMIT 1",
+                arrayOf(statementId),
+                ResultSetExtractor { rs -> rs.next() }
+        ) ?: false
     }
 
     override fun findAllByPackage(packageName: String, theoryId: Long): List<FixedMasStatement> {
         return this.jdbcTemplate.query(
                 "SELECT $COLUMNS_FOR_FETCHING FROM STATEMENT WHERE PACKAGE_ID = (" +
                         "SELECT ID FROM PACKAGE WHERE THEORY_ID = ? AND PATH = ? LIMIT 1" +
-                     ")",
+                        ")",
                 arrayOf(theoryId, packageName)
         ) { rs, _ -> this.map(rs) }
     }
 
 
     /// INSERTS
-    override fun saveAll(statements:List<FixedMasStatement>, scriptName: String, creationDate: Instant) {
+    override fun saveAll(statements: List<FixedMasStatement>, scriptName: String, creationDate: Instant) {
         JdbcUtils.saveBatch(statements, StatementSetManager(scriptName, creationDate), this.jdbcTemplate)
     }
 
@@ -88,7 +99,17 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         )
     }
 
-    private fun map(rs: ResultSet) : FixedMasStatement? {
+    override fun existsByParent(path: String, theoryId: Long): Boolean {
+        val pattern = if (path.isEmpty()) "%" else "$path.%"
+
+        return this.jdbcTemplate.query(
+                "SELECT ID FROM STATEMENT WHERE THEORY_ID = ? AND PATH LIKE ? LIMIT 1",
+                arrayOf(theoryId, pattern),
+                ResultSetExtractor { rs -> rs.next() }
+        ) ?: false
+    }
+
+    private fun map(rs: ResultSet): FixedMasStatement? {
         if (rs.isClosed) return null
 
         return FixedMasStatement(
@@ -111,7 +132,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
 private class StatementSetManager(val scriptName: String, val creationDate: Instant) : SetManager<FixedMasStatement> {
     override fun getInsertStatement() = "INSERT INTO STATEMENT (THEORY_ID, PATH, PACKAGE_ID, SCRIPT, TYPE, TEXT, CREATED_AT) VALUES (?, ?, ?, ?, ?, ?, ?)"
 
-    override fun populateParameters(value: FixedMasStatement, ps:PreparedStatement) {
+    override fun populateParameters(value: FixedMasStatement, ps: PreparedStatement) {
         ps.setLong(1, value.theoryId)
         ps.setString(2, value.path)
         ps.setLong(3, value.packageId)

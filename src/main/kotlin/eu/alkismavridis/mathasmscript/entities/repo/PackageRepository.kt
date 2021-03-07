@@ -6,4 +6,6 @@ interface PackageRepository {
     fun findAllByParent(path:String, theoryId: Long) : List<MasPackage>
 
     fun saveAll(packages:List<MasPackage>)
+    fun existsByParent(path: String, theoryId: Long): Boolean
+    fun delete(path: String, theoryId: Long): Boolean
 }

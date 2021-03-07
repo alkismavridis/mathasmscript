@@ -2,6 +2,7 @@ package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.*
 import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
+import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasPackage
 import eu.alkismavridis.mathasmscript.usecases.parser.createPackageUseCase
@@ -22,21 +23,30 @@ class MutationResolver(
         return ImportScript(theoryId, this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
     }
 
-    fun createPackage(name: String, parentPath: String, theoryId: Long) : MasPackage {
+    fun mkdir(name: String, parentPath: String, theoryId: Long) : MasPackage {
         return createPackageUseCase(parentPath, name, theoryId, this.packageRepo)
     }
 
-    fun mvPackage(theoryId: Long, currentPath:String, newPath:String) {
-        //1. Update package with new path + parentId. BE CAREFUL OF circular trees. Our new parent should not be a current child!
-        //2. Update all affected full paths:
-        // UPDATE PACKAGE SET PATH = CONCAT('booooo', SUBSTRING(PATH, LENGTH('bool.'), LENGTH(PATH))) WHERE PATH LIKE 'bool.%'
+    fun rmdir(path: String, theoryId: Long) : Boolean {
+        if (path.isEmpty()) {
+            throw MathAsmException("Cannot delete root package")
+        }
 
-        //3. Update all affected statements (sql similar to the one above)
+        val hasChildren = this.stmtRepo.existsByParent(path, theoryId) ||
+                this.packageRepo.existsByParent(path, theoryId)
+
+        if (hasChildren) {
+            throw MathAsmException("Only empty directories can be deleted")
+        }
+
+        val wasDeleted = this.packageRepo.delete(path, theoryId)
+        if (!wasDeleted) {
+            throw MathAsmException("Package $path was not found int theory $theoryId")
+        }
+
+        return true
     }
 
-    fun mvStatement(theoryId: Long, currentPath:String, newPath:String) : FixedMasStatement {
-        return moveStatement(theoryId, currentPath, newPath, this.stmtRepo, this.packageRepo)
-    }
 
     companion object {
         private val log = LoggerFactory.getLogger(MutationResolver::class.java)
