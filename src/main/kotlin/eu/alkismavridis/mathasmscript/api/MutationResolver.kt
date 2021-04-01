@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.api.resolvers
+package eu.alkismavridis.mathasmscript.api
 
 import eu.alkismavridis.mathasmscript.parser.ImportScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult

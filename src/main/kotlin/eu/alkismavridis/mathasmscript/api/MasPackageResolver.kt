@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.api.resolvers
+package eu.alkismavridis.mathasmscript.api
 
 import eu.alkismavridis.mathasmscript.repo.MasPackage
 import eu.alkismavridis.mathasmscript.repo.names.getSimpleNameOf
