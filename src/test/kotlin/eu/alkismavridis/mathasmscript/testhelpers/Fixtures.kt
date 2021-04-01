@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.testhelpers
 
-import eu.alkismavridis.mathasmscript.entities.logic.MathAsmExpression
-import eu.alkismavridis.mathasmscript.entities.logic.MathAsmStatement
-import eu.alkismavridis.mathasmscript.entities.logic.StatementType
+import eu.alkismavridis.mathasmscript.core.MathAsmExpression
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.StatementType
 
 class Fixtures {
     companion object {
