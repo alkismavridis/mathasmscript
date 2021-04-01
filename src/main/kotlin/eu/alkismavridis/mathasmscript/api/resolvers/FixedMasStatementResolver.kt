@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.api.resolvers
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
+import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 import eu.alkismavridis.mathasmscript.repo.names.getSimpleNameOf
 import graphql.kickstart.tools.GraphQLResolver
 import org.springframework.stereotype.Component

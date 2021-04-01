@@ -1,11 +1,12 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.parser.*
+import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
+import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 
 class ScopeException(message: String) : MathAsmException(message)
 
@@ -102,8 +103,8 @@ class MasScope(private val parent: MasScope?, private val inspections: MathasmIn
 }
 
 abstract class MasDeclaration(val nameToken: NameToken) {
-    abstract fun getStatement(logger: MathasmInspections): MathAsmStatement
-    abstract fun toVariable(name: String, symbolMap: SymbolMap, packageName: String, theoryId: Long, logger: MathasmInspections): MasVariable
+    abstract fun getStatement(inspections: MathasmInspections): MathAsmStatement
+    abstract fun toVariable(name: String, symbolMap: SymbolMap, packageName: String, theoryId: Long, inspections: MathasmInspections): MasVariable
 }
 
 private class StatementDeclaration(
@@ -112,14 +113,14 @@ private class StatementDeclaration(
         val isPrivate: Boolean
 ) : MasDeclaration(name) {
 
-    override fun getStatement(logger: MathasmInspections) = this.stmt
+    override fun getStatement(inspections: MathasmInspections) = this.stmt
 
-    override fun toVariable(name: String, symbolMap: SymbolMap, packageName: String, theoryId: Long, logger: MathasmInspections): MasVariable {
+    override fun toVariable(name: String, symbolMap: SymbolMap, packageName: String, theoryId: Long, inspections: MathasmInspections): MasVariable {
         val kind = if (this.isPrivate) MasVariableKind.LOCAL else MasVariableKind.EXPORT
         val fixedStmt = FixedMasStatement(
                 path = "${packageName}.${this.stmt.name}",
                 packageId = -1L,
-                type = this.stmt.type,
+                type = this.stmt.type.toFixedStatementType(),
                 text = symbolMap.toString(this.stmt),
                 theoryId = theoryId,
                 id = -1L
@@ -156,9 +157,9 @@ private class ImportDeclaration(val repoUrl: String, val fullName: String, local
         }
     }
 
-    fun setData(importData: ResolvedImport, logger: MathasmInspections) {
+    fun setData(importData: ResolvedImport, inspections: MathasmInspections) {
         if (this.importData != null) {
-            logger.error(this.nameToken.line, this.nameToken.column, "Cannot set value for import symbol ${this.nameToken.name}. It already contains a statement.")
+            inspections.error(this.nameToken.line, this.nameToken.column, "Cannot set value for import symbol ${this.nameToken.name}. It already contains a statement.")
         }
 
         this.importData = importData
@@ -168,9 +169,9 @@ private class ImportDeclaration(val repoUrl: String, val fullName: String, local
         this.isUsed = true
     }
 
-    fun assertUsed(logger: MathasmInspections) {
+    fun assertUsed(inspections: MathasmInspections) {
         if (!this.isUsed) {
-            logger.error(this.nameToken.line, this.nameToken.column, "Unused import statement detected: ${this.nameToken.name}")
+            inspections.error(this.nameToken.line, this.nameToken.column, "Unused import statement detected: ${this.nameToken.name}")
         }
     }
 }

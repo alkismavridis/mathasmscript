@@ -1,9 +1,8 @@
-package eu.alkismavridis.mathasmscript.repo.usecases
+package eu.alkismavridis.mathasmscript.parser
 
 import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.old.usecases.parser.extractExportedValues
 import eu.alkismavridis.mathasmscript.old.usecases.parser.extractImports
-import eu.alkismavridis.mathasmscript.parser.MathasmInspections
 import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserResult
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
@@ -12,6 +11,8 @@ import eu.alkismavridis.mathasmscript.repo.MasScript
 import eu.alkismavridis.mathasmscript.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.repo.ScriptRepository
 import eu.alkismavridis.mathasmscript.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.repo.usecases.assertStatementsNotExisting
+import eu.alkismavridis.mathasmscript.repo.usecases.getOrCreatePackage
 import org.slf4j.LoggerFactory
 import java.io.StringReader
 import java.time.Instant

@@ -1,15 +1,8 @@
 package eu.alkismavridis.mathasmscript.api.resolvers
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
 import eu.alkismavridis.mathasmscript.parser.ExecuteScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.persistence.DbPackageRepository
-import eu.alkismavridis.mathasmscript.persistence.DbScriptRepository
-import eu.alkismavridis.mathasmscript.persistence.DbStatementRepository
-import eu.alkismavridis.mathasmscript.persistence.DbTheoryRepository
-import eu.alkismavridis.mathasmscript.repo.MasScript
-import eu.alkismavridis.mathasmscript.repo.PackageContent
-import eu.alkismavridis.mathasmscript.repo.Theory
+import eu.alkismavridis.mathasmscript.repo.*
 import eu.alkismavridis.mathasmscript.repo.names.getPackageNameOf
 import eu.alkismavridis.mathasmscript.repo.usecases.getPackageContent
 import graphql.kickstart.tools.GraphQLQueryResolver
@@ -17,10 +10,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class QueryResolver(
-        private val packageRepo: DbPackageRepository,
-        private val stmtRepo: DbStatementRepository,
-        private val scriptRepo: DbScriptRepository,
-        private val theoryRepo: DbTheoryRepository
+        private val packageRepo: PackageRepository,
+        private val stmtRepo: StatementRepository,
+        private val scriptRepo: ScriptRepository,
+        private val theoryRepo: TheoryRepository
 ) : GraphQLQueryResolver {
     fun execute(theoryId: Long, script: String): ParserResult {
         return ExecuteScript(theoryId, this.stmtRepo).run(script)

@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.persistence
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
-import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.repo.FixedStatementType
 import eu.alkismavridis.mathasmscript.repo.StatementRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
@@ -115,7 +115,7 @@ class DbStatementRepository(val jdbcTemplate: JdbcTemplate, val namedJdbcTemplat
         return FixedMasStatement(
                 rs.getString("PATH"),
                 rs.getLong("PACKAGE_ID"),
-                StatementType.valueOf(rs.getString("TYPE")),
+                FixedStatementType.valueOf(rs.getString("TYPE")),
                 rs.getString("TEXT"),
                 rs.getLong("THEORY_ID"),
                 rs.getLong("ID")

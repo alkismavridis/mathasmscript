@@ -1,12 +1,11 @@
 package eu.alkismavridis.mathasmscript.api.resolvers
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.parser.ImportScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.persistence.DbPackageRepository
-import eu.alkismavridis.mathasmscript.persistence.DbScriptRepository
-import eu.alkismavridis.mathasmscript.persistence.DbStatementRepository
 import eu.alkismavridis.mathasmscript.repo.MasPackage
-import eu.alkismavridis.mathasmscript.repo.usecases.ImportScript
+import eu.alkismavridis.mathasmscript.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.repo.ScriptRepository
+import eu.alkismavridis.mathasmscript.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.repo.usecases.createPackageUseCase
 import graphql.kickstart.tools.GraphQLMutationResolver
 import org.slf4j.LoggerFactory
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class MutationResolver(
-        private val packageRepo: DbPackageRepository,
-        private val stmtRepo: DbStatementRepository,
-        private val scriptRepo: DbScriptRepository
+        private val packageRepo: PackageRepository,
+        private val stmtRepo: StatementRepository,
+        private val scriptRepo: ScriptRepository
 ) : GraphQLMutationResolver {
     fun commit(theoryId: Long, script: String): ParserResult {
         return ImportScript(theoryId, this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
@@ -29,19 +28,19 @@ class MutationResolver(
 
     fun rmdir(path: String, theoryId: Long) : Boolean {
         if (path.isEmpty()) {
-            throw MathAsmException("Cannot delete root package")
+            throw IllegalArgumentException("Cannot delete root package")
         }
 
         val hasChildren = this.stmtRepo.existsByParent(path, theoryId) ||
                 this.packageRepo.existsByParent(path, theoryId)
 
         if (hasChildren) {
-            throw MathAsmException("Only empty directories can be deleted")
+            throw IllegalArgumentException("Only empty directories can be deleted")
         }
 
         val wasDeleted = this.packageRepo.delete(path, theoryId)
         if (!wasDeleted) {
-            throw MathAsmException("Package $path was not found int theory $theoryId")
+            throw IllegalArgumentException("Package $path was not found int theory $theoryId")
         }
 
         return true

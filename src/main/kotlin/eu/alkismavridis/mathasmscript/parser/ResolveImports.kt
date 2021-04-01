@@ -1,9 +1,10 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
+import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 import eu.alkismavridis.mathasmscript.repo.StatementRepository
 import java.io.StringReader
 import java.util.stream.Collectors
@@ -40,7 +41,7 @@ class ResolveImports(private val repository: StatementRepository, private val th
                 throw MathAsmException(message)
             }
 
-            val toStatement = ParseStatementString(StringReader(it.text), map, localName.name, it.type, '\u0000').parse()
+            val toStatement = ParseStatementString(StringReader(it.text), map, localName.name, it.type.toStatementType(), '\u0000').parse()
             result[localName] = ResolvedImport(toStatement, it, "")
         }
 

@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.persistence
 
-import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.repo.MasScript
+import eu.alkismavridis.mathasmscript.repo.MasScriptImport
 import eu.alkismavridis.mathasmscript.repo.ScriptRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.ResultSetExtractor
@@ -13,7 +13,7 @@ import java.sql.Timestamp
 
 @Component
 class DbScriptRepository(val jdbcTemplate: JdbcTemplate) : ScriptRepository {
-    override fun saveScript(script: MasScript, imports: Collection<MasVariable>) {
+    override fun saveScript(script: MasScript, imports: Collection<MasScriptImport>) {
         this.jdbcTemplate.update{con ->
             val ps = con.prepareStatement(INSERT_STATEMENT)
             this.prepareStatement(script, ps)
@@ -56,19 +56,17 @@ class DbScriptRepository(val jdbcTemplate: JdbcTemplate) : ScriptRepository {
     }
 }
 
-private class ScriptImportSetManager(val scriptName:String, val theoryId: Long) : SetManager<MasVariable> {
+private class ScriptImportSetManager(val scriptName:String, val theoryId: Long) : SetManager<MasScriptImport> {
     override fun getInsertStatement() = "INSERT INTO SCRIPT_IMPORTS (THEORY_ID, SCRIPT_NAME, INTERNAL_STATEMENT_ID, EXTERNAL_STATEMENT_ID) VALUES (?, ?, ?, ?)"
 
-    override fun populateParameters(variable: MasVariable, ps: PreparedStatement) {
-        val externalPath = if (variable.value.path.isEmpty()) "" else "${variable.value.path} -> ${variable.importUrl}"
-
+    override fun populateParameters(value: MasScriptImport, ps: PreparedStatement) {
         ps.setLong(1, this.theoryId)
         ps.setString(2, this.scriptName)
-        JdbcUtils.setIdOrNull(3, variable.value.id, ps)
-        ps.setString(4, externalPath) // TODO rename EXTERNAL_STATEMENT_ID ---> EXTERNAL_URL
+        JdbcUtils.setIdOrNull(3, value.internalId, ps)
+        ps.setString(4, value.externalPath) // TODO rename EXTERNAL_STATEMENT_ID ---> EXTERNAL_URL
     }
 
-    override fun setGeneratedValues(entity: MasVariable, keys: ResultSet) {
+    override fun setGeneratedValues(entity: MasScriptImport, keys: ResultSet) {
         // Nothing to be done
     }
 }

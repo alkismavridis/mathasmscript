@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser.result
 
-import eu.alkismavridis.mathasmscript.core.FixedMasStatement
+import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 
 class MasVariable(
         val kind: MasVariableKind,
