@@ -8,16 +8,6 @@ import java.sql.Statement.RETURN_GENERATED_KEYS
 import java.sql.Types
 
 
-class TestEntity(
-        var id:Long,
-        val foo:String,
-        val bar: String
-)
-
-
-
-
-
 interface SetManager<T> {
     fun getInsertStatement(): String
 

@@ -1,6 +1,5 @@
-package eu.alkismavridis.mathasmscript.repo.names.validations
+package eu.alkismavridis.mathasmscript.repo.validations
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import java.util.regex.Pattern
 
 
@@ -16,7 +15,7 @@ fun isTheoremNameValid(name:String) : Boolean {
 
 fun assertTheoremNameValid(name: String) {
     if (!isTheoremNameValid(name)) {
-        throw MathAsmException(INVALID_THEOREM_NAME_MESSAGE)
+        throw IllegalArgumentException(INVALID_THEOREM_NAME_MESSAGE)
     }
 }
 
@@ -26,6 +25,6 @@ fun isAxiomNameValid(name:String) : Boolean {
 
 fun assertAxiomNameValid(name: String) {
     if (!isAxiomNameValid(name)) {
-        throw MathAsmException(INVALID_AXIOM_NAME_MESSAGE)
+        throw IllegalArgumentException(INVALID_AXIOM_NAME_MESSAGE)
     }
 }

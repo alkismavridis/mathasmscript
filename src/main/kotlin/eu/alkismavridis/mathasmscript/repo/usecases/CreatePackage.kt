@@ -3,7 +3,7 @@ package eu.alkismavridis.mathasmscript.repo.usecases
 import eu.alkismavridis.mathasmscript.repo.MasPackage
 import eu.alkismavridis.mathasmscript.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.repo.names.mergeNames
-import eu.alkismavridis.mathasmscript.repo.names.validations.assertPackagePathValid
+import eu.alkismavridis.mathasmscript.repo.validations.assertPackagePathValid
 import java.time.Instant
 
 fun createPackageUseCase(parentPath: String, packageName: String, theoryId: Long, packageRepo: PackageRepository) : MasPackage {

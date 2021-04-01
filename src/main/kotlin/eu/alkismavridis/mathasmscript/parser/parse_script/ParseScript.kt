@@ -9,7 +9,7 @@ import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.tokens.MasTokenizer
 import eu.alkismavridis.mathasmscript.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.repo.names.validations.*
+import eu.alkismavridis.mathasmscript.repo.validations.*
 import java.io.Reader
 import java.io.StringReader
 

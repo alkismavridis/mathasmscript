@@ -1,6 +1,5 @@
-package eu.alkismavridis.mathasmscript.repo.names.validations
+package eu.alkismavridis.mathasmscript.repo.validations
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import java.util.regex.Pattern
 
 
@@ -14,7 +13,7 @@ fun isPackageNameValid(partName:String) : Boolean {
 
 fun assertPackageNameValid(partName:String) {
     if (!isPackageNameValid(partName)) {
-        throw MathAsmException(PACKAGE_NAME_ERROR_MESSAGE)
+        throw IllegalArgumentException(PACKAGE_NAME_ERROR_MESSAGE)
     }
 }
 
@@ -25,7 +24,7 @@ fun isPackagePathValid(path: String) : Boolean {
 
 fun assertPackagePathValid(path: String) {
     if (!isPackagePathValid(path)) {
-        throw MathAsmException(PACKAGE_NAME_ERROR_MESSAGE)
+        throw IllegalArgumentException(PACKAGE_NAME_ERROR_MESSAGE)
     }
 }
 

@@ -1,6 +1,5 @@
 package eu.alkismavridis.mathasmscript.repo.usecases
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.repo.MasPackage
 import eu.alkismavridis.mathasmscript.repo.PackageRepository
 import org.slf4j.LoggerFactory
@@ -29,7 +28,7 @@ fun getOrCreatePackage(theoryId: Long, path:String, createdAt: Instant, repo: Pa
         log.info("Package {} was created with id {}", newPackage.path, newPackage.id)
     }
 
-    return existingParents[path] ?: throw MathAsmException("Internal error: could not save package $path")
+    return existingParents[path] ?: throw IllegalStateException("Internal error: could not save package $path")
 }
 
 

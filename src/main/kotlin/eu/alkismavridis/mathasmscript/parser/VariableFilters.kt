@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.old.usecases.parser
+package eu.alkismavridis.mathasmscript.parser
 
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
