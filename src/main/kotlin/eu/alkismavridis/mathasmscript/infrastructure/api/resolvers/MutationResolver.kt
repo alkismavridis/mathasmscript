@@ -1,13 +1,11 @@
 package eu.alkismavridis.mathasmscript.infrastructure.api.resolvers
 
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.*
-import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
-import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParserResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasPackage
 import eu.alkismavridis.mathasmscript.usecases.parser.createPackageUseCase
 import eu.alkismavridis.mathasmscript.usecases.repo.ImportScript
-import eu.alkismavridis.mathasmscript.usecases.repo.moveStatement
 import graphql.kickstart.tools.GraphQLMutationResolver
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -19,7 +17,7 @@ class MutationResolver(
         private val stmtRepo: DbStatementRepository,
         private val scriptRepo: DbScriptRepository
 ) : GraphQLMutationResolver {
-    fun commit(theoryId: Long, script: String): ParseResult {
+    fun commit(theoryId: Long, script: String): ParserResult {
         return ImportScript(theoryId, this.stmtRepo, this.packageRepo, this.scriptRepo).run(script)
     }
 

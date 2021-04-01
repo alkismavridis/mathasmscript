@@ -1,9 +1,8 @@
-import FixedMasStatement from "./FixedMasStatement";
 import MasPackage from "./MasPackage";
+import ParserResult from "./ParserResult";
 
 export default class Mutation {
-    // commit: ParseResult!
-    mvStatement: FixedMasStatement
+    commit: ParserResult
     mkdir: MasPackage
     rmdir: Boolean
 }

@@ -7,7 +7,7 @@ schema {
 
 type Query {
     theories: [Theory!]!
-    execute(theoryId: Long!, script:String!): ParseResult!
+    execute(theoryId: Long!, script:String!): ParserResult!
     ls(theoryId: Long!, packageName:String!): PackageContent!
     lsParent(theoryId: Long!, packageName:String!): PackageContent!
     cat(theoryId: Long!, file:String!) : MasScript
@@ -16,8 +16,7 @@ type Query {
 }
 
 type Mutation {
-    commit(theoryId: Long!, script:String!): ParseResult!
-
+    commit(theoryId: Long!, script:String!): ParserResult!
     mkdir(name: String!, parentPath: String!, theoryId: Long!) : MasPackage!
     rmdir(path: String!, theoryId: Long!) : Boolean
 }
@@ -55,19 +54,19 @@ type MasScript {
     theoryId: Long!
 }
 
-type ParseResult {
-    success: Boolean
+type ParserResult {
+    status: String
     packageName: String
     scriptName: String
-    exports: [FixedMasStatement!]!
+    variables: [MasVariable!]!
     comments: [InspectionComment!]!
-    imports: [MasImport!]!
 }
 
-type MasImport {
-    internalName: String
-    importUrl: String
-    statement: FixedMasStatement
+type MasVariable {
+    kind: String!
+    name: String!
+    value: FixedMasStatement!
+    importUrl: String!
 }
 
 type InspectionComment {

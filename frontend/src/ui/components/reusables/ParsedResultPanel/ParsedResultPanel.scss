@@ -1,0 +1,33 @@
+.parsed-result-panel {
+  //display: grid;
+  //grid-template-columns: auto auto;
+  //grid-gap: 8px;
+  //justify-content: start;
+}
+
+.parsed-result-panel__success {
+  color: red;
+
+  &[data-status="EXECUTED"] { color: green; }
+  &[data-status="IMPORTED"] { color: blue; }
+}
+
+.parsed-result-panel__var-grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: start;
+  grid-gap: 8px;
+}
+
+.parsed-result-panel__comment {
+  color: grey;
+  &[data-type="INFO"] { color: green; }
+  &[data-type="WARNING"] { color: orange; }
+  &[data-type="ERROR"] { color: red; }
+  &[data-type="APP_ERROR"] { color: purple; }
+}
+
+.parsed-result-panel__var-type {
+  color: green;
+  &[data-type="AXIOM"] { color: red; }
+}

@@ -1,6 +1,5 @@
 package eu.alkismavridis.mathasmscript.usecases.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
 import eu.alkismavridis.mathasmscript.entities.parser.SymbolMap
 import eu.alkismavridis.mathasmscript.entities.logic.*
 import eu.alkismavridis.mathasmscript.entities.logic.rules.stabilizeOpenTheorem
@@ -13,7 +12,7 @@ import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceAllInSentence
 import eu.alkismavridis.mathasmscript.entities.logic.rules.replaceSingleMatch
 import eu.alkismavridis.mathasmscript.entities.logic.rules.revertStatement
 import eu.alkismavridis.mathasmscript.entities.logic.rules.startTheorem
-import eu.alkismavridis.mathasmscript.entities.parser.result.MasImport
+import eu.alkismavridis.mathasmscript.entities.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.usecases.names.validations.*
 import eu.alkismavridis.mathasmscript.usecases.parser.resolve_imports.ResolveImports
 import java.io.Reader
@@ -23,8 +22,7 @@ import java.lang.StringBuilder
 
 class MasParserResult(
         val packageName: String,
-        val imports: Collection<MasImport>,
-        val exports: Collection<FixedMasStatement>
+        val variables: Collection<MasVariable>
 )
 
 private class TokenLineInfo(val linesBeforeToken: Int, val token: MasToken)
@@ -50,23 +48,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
         return MasParserResult(
                 this.packageName,
-                this.scope.getImports().map {
-                    MasImport(
-                            it.first,
-                            it.second.externalUrl,
-                            it.second.fixesStatement
-                    )
-                }.toList(),
-                this.scope.getExportableStatements().map {
-                    FixedMasStatement(
-                            path = "${this.packageName}.${it.name}",
-                            packageId = -1L,
-                            type = it.type,
-                            text = this.symbolMap.toString(it),
-                            theoryId = this.theoryId,
-                            id = -1L
-                    )
-                }
+                this.scope.getVariables(this.symbolMap, this.packageName, this.theoryId)
         )
     }
 

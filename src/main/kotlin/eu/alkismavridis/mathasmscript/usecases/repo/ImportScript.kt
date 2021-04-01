@@ -2,11 +2,14 @@ package eu.alkismavridis.mathasmscript.usecases.repo
 
 import eu.alkismavridis.mathasmscript.entities.logic.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.entities.parser.MathasmInspections
-import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParserResult
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParserResultStatus
 import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.entities.repo.ScriptRepository
 import eu.alkismavridis.mathasmscript.entities.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.usecases.parser.extractExportedValues
+import eu.alkismavridis.mathasmscript.usecases.parser.extractImports
 import eu.alkismavridis.mathasmscript.usecases.parser.parse_script.ParseScript
 import eu.alkismavridis.mathasmscript.usecases.parser.parse_script.MasParserResult
 import org.slf4j.LoggerFactory
@@ -21,7 +24,7 @@ class ImportScript(
         private val packageRepo: PackageRepository,
         private val scriptRepo: ScriptRepository
 ) {
-    fun run(scriptText: String) : ParseResult {
+    fun run(scriptText: String) : ParserResult {
         val inspections = MathasmInspections()
         val scriptName = "${UUID.randomUUID()}.mas"
         var packageName = ""
@@ -33,21 +36,19 @@ class ImportScript(
             this.assertResultValidity(result, inspections)
             this.saveResult(result, scriptName, scriptText)
 
-            return ParseResult(
-                    !inspections.hasErrors(),
+            return ParserResult(
+                    if(inspections.hasErrors()) ParserResultStatus.ERROR else ParserResultStatus.IMPORTED,
                     scriptName,
                     result.packageName,
-                    result.imports,
-                    result.exports,
+                    result.variables,
                     inspections.getEntries()
             )
         } catch (e: Throwable) {
             log.error("Error while importing script> {}", e.message)
-            return ParseResult(
-                    false,
+            return ParserResult(
+                    ParserResultStatus.ERROR,
                     scriptName,
                     packageName,
-                    emptyList(),
                     emptyList(),
                     inspections.getEntries()
             )
@@ -57,24 +58,29 @@ class ImportScript(
     private fun saveResult(result: MasParserResult, scriptName: String, scriptText: String) {
         val creationDate = Instant.now()
         val packageToSave = getOrCreatePackage(this.theoryId, result.packageName, creationDate, this.packageRepo)
-        result.exports.forEach{ it.packageId = packageToSave.id }
+        val exports = extractExportedValues(result.variables)
+        val imports = extractImports(result.variables)
+
+        exports.forEach{ it.packageId = packageToSave.id }
 
         log.info("Saving script {}", scriptName)
         val script = MasScript(this.theoryId, scriptText, scriptName, Instant.now())
-        this.scriptRepo.saveScript(script, result.imports)
+        this.scriptRepo.saveScript(script, imports)
 
-        log.info("Importing {} statements for script {}", result.exports.size, result.packageName)
-        this.stmtRepo.saveAll(ArrayList(result.exports), scriptName, creationDate)
+        log.info("Importing {} statements for script {}", exports.size, result.packageName)
+        this.stmtRepo.saveAll(ArrayList(exports), scriptName, creationDate)
     }
 
     private fun assertResultValidity(result: MasParserResult, inspections: MathasmInspections) {
-        if (result.exports.isEmpty()) {
+        val exports = extractExportedValues(result.variables)
+
+        if (exports.isEmpty()) {
             val errorMessage = "Script does not export anything. Aborting import process."
             inspections.error(errorMessage)
             throw MathAsmException(errorMessage)
         }
 
-        AssertStatementsNotExisting.check(this.theoryId, result.exports, this.stmtRepo, inspections)
+        assertStatementsNotExisting(this.theoryId, exports, this.stmtRepo, inspections)
     }
 
     companion object {

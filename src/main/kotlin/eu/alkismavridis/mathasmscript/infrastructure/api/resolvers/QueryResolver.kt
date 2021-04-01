@@ -4,7 +4,7 @@ import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbPackageReposi
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbScriptRepository
 import eu.alkismavridis.mathasmscript.infrastructure.persistence.DbStatementRepository
 import eu.alkismavridis.mathasmscript.entities.logic.FixedMasStatement
-import eu.alkismavridis.mathasmscript.entities.parser.result.ParseResult
+import eu.alkismavridis.mathasmscript.entities.parser.result.ParserResult
 import eu.alkismavridis.mathasmscript.entities.repo.MasScript
 import eu.alkismavridis.mathasmscript.entities.repo.PackageContent
 import eu.alkismavridis.mathasmscript.entities.repo.Theory
@@ -22,7 +22,7 @@ class QueryResolver(
         private val scriptRepo: DbScriptRepository,
         private val theoryRepo: DbTheoryRepository
 ) : GraphQLQueryResolver {
-    fun execute(theoryId: Long, script: String): ParseResult {
+    fun execute(theoryId: Long, script: String): ParserResult {
         return ExecuteScript(theoryId, this.stmtRepo).run(script)
     }
 
