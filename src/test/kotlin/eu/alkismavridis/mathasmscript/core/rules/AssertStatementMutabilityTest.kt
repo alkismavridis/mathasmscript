@@ -1,7 +1,8 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.StatementImmutableException
+import eu.alkismavridis.mathasmscript.core.internal.StatementImmutableException
+import eu.alkismavridis.mathasmscript.core.internal.assertStatementMutability
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

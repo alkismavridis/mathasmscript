@@ -3,12 +3,12 @@ package eu.alkismavridis.mathasmscript.parser.parse_script
 import eu.alkismavridis.mathasmscript.core.MathAsmExpression
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.parser.ParserException
 import eu.alkismavridis.mathasmscript.parser.SymbolMap
 import java.io.Reader
 
 
-class ParseAxiomException(message:String) : MathAsmException(message)
+class ParseAxiomException(message:String) : ParserException(message)
 
 class ParseStatementString(
         private val reader:Reader,

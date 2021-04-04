@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.core
+package eu.alkismavridis.mathasmscript.core.internal
 
 class ExpressionSelection(capacity: Int, val sizeIncrement: Int = 100) {
     var length:Int = 0; private set

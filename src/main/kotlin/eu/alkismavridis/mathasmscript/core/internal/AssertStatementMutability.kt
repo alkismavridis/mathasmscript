@@ -1,7 +1,6 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal
 
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.StatementImmutableException
 
 
 @Throws(StatementImmutableException::class)

@@ -3,8 +3,8 @@ package eu.alkismavridis.mathasmscript.core.rules
 import eu.alkismavridis.mathasmscript.core.LogicSelection
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalBaseException
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalSentenceReplacementException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalBaseException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalSentenceReplacementException
 import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

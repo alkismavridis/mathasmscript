@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalDirectionException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalDirectionException
 
 fun revertStatement(target: MathAsmStatement) : MathAsmStatement {
     if (!target.isBidirectional) {

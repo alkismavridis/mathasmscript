@@ -1,5 +1,5 @@
 package eu.alkismavridis.mathasmscript.parser.tokens
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.parser.ParserException
 
-class TokenizerException(message: String) : MathAsmException(message)
+class TokenizerException(message: String) : ParserException(message)

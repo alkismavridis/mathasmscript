@@ -2,7 +2,7 @@ package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.core.internal.MathAsmException
 
 class StabilizeTheoremException(message:String) : MathAsmException(message)
 

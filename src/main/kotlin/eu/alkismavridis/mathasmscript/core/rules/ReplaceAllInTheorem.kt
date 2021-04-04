@@ -2,7 +2,10 @@ package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.LogicSelection
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalReplaceAllException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalReplaceAllException
+import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
+import eu.alkismavridis.mathasmscript.core.internal.assertStatementMutability
+import eu.alkismavridis.mathasmscript.core.internal.getOpenTheorem
 
 fun replaceAll(target: MathAsmStatement, base: MathAsmStatement, sel: LogicSelection, nameForClones:String) : MathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)

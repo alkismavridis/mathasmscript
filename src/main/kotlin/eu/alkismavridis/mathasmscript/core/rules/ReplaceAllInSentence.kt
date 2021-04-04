@@ -3,7 +3,10 @@ package eu.alkismavridis.mathasmscript.core.rules
 import eu.alkismavridis.mathasmscript.core.LogicSelection
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalSentenceReplacementException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalSentenceReplacementException
+import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
+import eu.alkismavridis.mathasmscript.core.internal.assertStatementMutability
+import eu.alkismavridis.mathasmscript.core.internal.getOpenTheorem
 
 fun replaceAllInSentence(target: MathAsmStatement, sideToEdit: StatementSide, base: MathAsmStatement, sel: LogicSelection, nameForClones:String) : MathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)

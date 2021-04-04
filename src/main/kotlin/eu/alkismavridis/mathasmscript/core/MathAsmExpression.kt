@@ -1,5 +1,7 @@
 package eu.alkismavridis.mathasmscript.core
 
+import eu.alkismavridis.mathasmscript.core.internal.ExpressionSelection
+
 
 class MathAsmExpression {
     var words: LongArray; private set

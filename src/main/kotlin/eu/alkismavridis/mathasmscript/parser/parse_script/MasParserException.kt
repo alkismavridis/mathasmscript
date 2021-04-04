@@ -1,5 +1,5 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
+import eu.alkismavridis.mathasmscript.parser.ParserException
 
-class MasParserException(message:String) : MathAsmException(message)
+class MasParserException(message:String) : ParserException(message)

@@ -7,7 +7,8 @@ import eu.alkismavridis.mathasmscript.repo.FixedStatementType
 fun StatementType.toFixedStatementType() : FixedStatementType {
     return when(this) {
         StatementType.AXIOM -> FixedStatementType.AXIOM
-        StatementType.THEOREM -> FixedStatementType.THEOREM
+        StatementType.THEOREM,
+        StatementType.OPEN_THEOREM -> FixedStatementType.THEOREM
         else -> throw MasParserException("Cannot map StatementType ${this.name} to FixedStatementType")
     }
 }

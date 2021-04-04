@@ -4,7 +4,8 @@ import eu.alkismavridis.mathasmscript.core.MathAsmExpression
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.exceptions.IllegalTheoremStartException
+import eu.alkismavridis.mathasmscript.core.internal.IllegalTheoremStartException
+import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
 
 fun startTheorem(name:String, base: MathAsmStatement, side: StatementSide) : MathAsmStatement {
     assertStartValidity(base, side)

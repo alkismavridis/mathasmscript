@@ -1,6 +1,5 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.parser.result.InspectionComment
 import eu.alkismavridis.mathasmscript.parser.result.InspectionType
 
@@ -25,7 +24,7 @@ class MathasmInspections {
 
     fun assertNoErrors() {
         if (!this.hasErrors()) return
-        throw MathAsmException("Fatal errors were detected. Abort.")
+        throw ParserException("Fatal errors were detected. Abort.")
     }
 
     fun getEntries() : List<InspectionComment> {

@@ -1,6 +1,5 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserResult
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
@@ -76,7 +75,7 @@ class ImportScript(
         if (exports.isEmpty()) {
             val errorMessage = "Script does not export anything. Aborting import process."
             inspections.error(errorMessage)
-            throw MathAsmException(errorMessage)
+            throw ParserException(errorMessage)
         }
 
         val existingStatements = findExistingStatements(this.theoryId, exports, this.stmtRepo)

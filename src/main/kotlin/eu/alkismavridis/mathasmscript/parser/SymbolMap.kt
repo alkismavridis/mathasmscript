@@ -1,11 +1,10 @@
 package eu.alkismavridis.mathasmscript.parser
 
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import java.io.PrintStream
 
 
-class SymbolNotFoundException(message:String) : MathAsmException(message) {}
+class SymbolNotFoundException(message:String) : ParserException(message)
 
 class SymbolMap {
     private val textToId = mutableMapOf<String, Long>()

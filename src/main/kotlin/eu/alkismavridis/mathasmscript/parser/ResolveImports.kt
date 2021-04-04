@@ -1,7 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser
 
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
@@ -38,7 +37,7 @@ class ResolveImports(private val repository: StatementRepository, private val th
             if (localName == null) {
                 val message = "Internal error: Could not locate local name for full name ${it.path}"
                 parseLogger.error(-1, -1, message)
-                throw MathAsmException(message)
+                throw ParserException(message)
             }
 
             val toStatement = ParseStatementString(StringReader(it.text), map, localName.name, it.type.toStatementType(), '\u0000').parse()

@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal
 
 import eu.alkismavridis.mathasmscript.core.MathAsmExpression
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement

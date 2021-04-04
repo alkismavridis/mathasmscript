@@ -1,14 +1,13 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
 import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.exceptions.MathAsmException
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 
-class ScopeException(message: String) : MathAsmException(message)
+class ScopeException(message: String) : ParserException(message)
 
 class MasScope(private val parent: MasScope?, private val inspections: MathasmInspections) {
     private val declarations = mutableMapOf<String, MasDeclaration>()
