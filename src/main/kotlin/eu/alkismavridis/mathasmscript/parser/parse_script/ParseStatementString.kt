@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.rules.createAxiom
 import eu.alkismavridis.mathasmscript.parser.ParserException
 import eu.alkismavridis.mathasmscript.parser.SymbolMap
 import java.io.Reader
@@ -13,6 +13,7 @@ class ParseAxiomException(message:String) : ParserException(message)
 class ParseStatementString(
         private val reader:Reader,
         private val symbolMap: SymbolMap,
+        private val manager: MathasmStatementManager,
         private val name:String,
         private val type: StatementType,
         private val endingChar:Char) {
@@ -24,12 +25,12 @@ class ParseStatementString(
     private var right = mutableListOf<Long>()
 
 
-    fun parse() : MutableMathAsmStatement {
+    fun parse() : MathAsmStatement {
         while (true) {
             val firstChar = readNextNonWhiteNorNewLine()
 
             when(firstChar) {
-                endingChar, '\u0000' -> return this.commitAxiomCreation()
+                endingChar, '\u0000' -> return this.commitStatementCreation()
             }
 
             val nextToken = this.getNextToken(firstChar)
@@ -39,7 +40,7 @@ class ParseStatementString(
 
 
     /// STATEMENT BUILDING
-    private fun commitAxiomCreation() : MutableMathAsmStatement {
+    private fun commitStatementCreation() : MathAsmStatement {
         if(this.grade == -1) {
             throw ParseAxiomException("Cannot create an axiom ${this.name} without a connection")
         }
@@ -52,7 +53,7 @@ class ParseStatementString(
             throw ParseAxiomException("Right sentence cannot be empty")
         }
 
-        return createAxiom(
+        return manager.createStatement(
                 this.name,
                 this.type,
                 this.left.toLongArray(),

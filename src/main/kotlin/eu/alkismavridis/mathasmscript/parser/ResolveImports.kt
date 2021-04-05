@@ -1,6 +1,7 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
@@ -9,16 +10,20 @@ import java.io.StringReader
 import java.util.stream.Collectors
 
 class ResolvedImport(
-        val statement: MutableMathAsmStatement,
+        val statement: MathAsmStatement,
         val fixesStatement: FixedMasStatement,
         val externalUrl: String
 )
 
-class ResolveImports(private val repository: StatementRepository, private val theoryId: Long) {
-    fun resolve(imports: Collection<MasRepositoryImports>, map: SymbolMap, parseLogger: MathasmInspections) : Map<NameToken, ResolvedImport> {
+class ResolveImports(
+        private val repository: StatementRepository,
+        private val theoryId: Long,
+        private val statementManager: MathasmStatementManager
+) {
+    fun resolve(imports: Collection<MasRepositoryImports>, map: SymbolMap, parseLogger: MathasmInspections): Map<NameToken, ResolvedImport> {
         val result = mutableMapOf<NameToken, ResolvedImport>()
 
-        imports.forEach{
+        imports.forEach {
             if (it.url != "") this.importRemote(parseLogger)
             else this.importLocal(it, result, map, parseLogger)
         }
@@ -40,20 +45,19 @@ class ResolveImports(private val repository: StatementRepository, private val th
                 throw ParserException(message)
             }
 
-            val toStatement = ParseStatementString(StringReader(it.text), map, localName.name, it.type.toStatementType(), '\u0000').parse()
+            val toStatement = ParseStatementString(StringReader(it.text), map, statementManager, localName.name, it.type.toStatementType(), '\u0000').parse()
             result[localName] = ResolvedImport(toStatement, it, "")
         }
 
         this.assertAllImportsArePresent(fromDb, repositoryImports, parseLogger)
     }
 
-    private fun assertAllImportsArePresent(fetched:Collection<FixedMasStatement>, requestedImports: MasRepositoryImports, parseLogger: MathasmInspections)  {
-        val fetchedFullNames = fetched.stream().map{it.path}.collect(Collectors.toSet())
-        requestedImports.variables.forEach{
+    private fun assertAllImportsArePresent(fetched: Collection<FixedMasStatement>, requestedImports: MasRepositoryImports, parseLogger: MathasmInspections) {
+        val fetchedFullNames = fetched.stream().map { it.path }.collect(Collectors.toSet())
+        requestedImports.variables.forEach {
             if (!fetchedFullNames.contains(it.value)) {
                 parseLogger.error(requestedImports.line, requestedImports.column, "Statement ${requestedImports.url}${it.value} is not found.")
             }
         }
     }
-
 }

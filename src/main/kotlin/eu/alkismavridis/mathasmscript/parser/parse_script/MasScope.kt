@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
@@ -12,7 +12,7 @@ class MasScope(private val parent: MasScope?, private val inspections: MathasmIn
     private val declarations = mutableMapOf<String, MasDeclaration>()
 
 
-    fun declareStatement(nameToken: NameToken, stmt: MutableMathAsmStatement, isPrivate: Boolean) {
+    fun declareStatement(nameToken: NameToken, stmt: MathAsmStatement, isPrivate: Boolean) {
         if (this.declarations.containsKey(nameToken.name)) {
             this.inspections.error(nameToken.line, nameToken.column, "Cannot re-declare symbol ${nameToken.name}")
         }
@@ -29,7 +29,7 @@ class MasScope(private val parent: MasScope?, private val inspections: MathasmIn
         this.declarations[localNameToken.name] = ImportDeclaration(repoUrl, fullName, localNameToken)
     }
 
-    fun requireStatement(name: NameToken): MutableMathAsmStatement {
+    fun requireStatement(name: NameToken): MathAsmStatement {
         val symbol = this.findSymbol(name)
         if (symbol is ImportDeclaration) symbol.markAsUsed()
 
@@ -101,13 +101,13 @@ class MasScope(private val parent: MasScope?, private val inspections: MathasmIn
 }
 
 abstract class MasDeclaration(val nameToken: NameToken) {
-    abstract fun getStatement(inspections: MathasmInspections): MutableMathAsmStatement
+    abstract fun getStatement(inspections: MathasmInspections): MathAsmStatement
     abstract fun toVariable(name: String, symbolMap: SymbolMap, packageName: String, theoryId: Long, inspections: MathasmInspections): MasVariable
 }
 
 private class StatementDeclaration(
         name: NameToken,
-        val stmt: MutableMathAsmStatement,
+        val stmt: MathAsmStatement,
         val isPrivate: Boolean
 ) : MasDeclaration(name) {
 
@@ -132,7 +132,7 @@ private class ImportDeclaration(val repoUrl: String, val fullName: String, local
     var importData: ResolvedImport? = null
     private var isUsed = false
 
-    override fun getStatement(inspections: MathasmInspections): MutableMathAsmStatement {
+    override fun getStatement(inspections: MathasmInspections): MathAsmStatement {
         this.assertImportDataPresent(inspections)
         return this.importData!!.statement
     }

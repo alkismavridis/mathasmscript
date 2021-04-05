@@ -1,11 +1,7 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal.rules
 
-import eu.alkismavridis.mathasmscript.core.LogicSelection
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
-import eu.alkismavridis.mathasmscript.core.internal.IllegalSingleReplacementException
-import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
-import eu.alkismavridis.mathasmscript.core.internal.getOpenTheorem
+import eu.alkismavridis.mathasmscript.core.internal.*
 
 fun replaceSingleMatch(target: MutableMathAsmStatement, sideToEdit: StatementSide, positionToReplace:Int, base: MutableMathAsmStatement, sel: LogicSelection, nameForClones:String) : MutableMathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)

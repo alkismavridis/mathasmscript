@@ -1,6 +1,5 @@
 package eu.alkismavridis.mathasmscript.core.internal
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
 
 fun getOpenTheorem(target: MutableMathAsmStatement, nameForClones:String) : MutableMathAsmStatement {

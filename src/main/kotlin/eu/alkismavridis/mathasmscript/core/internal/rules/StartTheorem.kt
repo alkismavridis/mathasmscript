@@ -1,10 +1,10 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal.rules
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.IllegalTheoremStartException
 import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
+import eu.alkismavridis.mathasmscript.core.internal.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
 
 fun startTheorem(name:String, base: MutableMathAsmStatement, side: StatementSide) : MutableMathAsmStatement {

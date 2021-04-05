@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal.rules
 
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.StatementImmutableException

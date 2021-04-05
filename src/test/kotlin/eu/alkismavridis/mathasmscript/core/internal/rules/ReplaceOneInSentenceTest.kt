@@ -1,10 +1,10 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal.rules
 
-import eu.alkismavridis.mathasmscript.core.LogicSelection
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.IllegalBaseException
 import eu.alkismavridis.mathasmscript.core.internal.IllegalSingleReplacementException
+import eu.alkismavridis.mathasmscript.core.internal.LogicSelection
 import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

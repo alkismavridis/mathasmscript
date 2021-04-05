@@ -1,10 +1,9 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.LogicSelection
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
-import eu.alkismavridis.mathasmscript.core.rules.*
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.tokens.MasTokenizer
@@ -29,7 +28,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
     private val scope = MasScope(null, inspections)
     private val symbolMap = SymbolMap()
     private var rolledBackToken: MasToken? = null
-    private val logicSelection = LogicSelection(100)
+    private val statementManager = MathasmStatementManager()
 
     private var hasResolvedImports = false
     private var hasDeclaredTheorem = false
@@ -217,7 +216,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         val axiomStringToken = this.requireString()
         this.requireNewLineOrEof()
 
-        val axiom = ParseStatementString(StringReader(axiomStringToken.text), this.symbolMap, nameToken.name, StatementType.AXIOM, '"').parse()
+        val axiom = ParseStatementString(StringReader(axiomStringToken.text), this.symbolMap, this.statementManager, nameToken.name, StatementType.AXIOM, '"').parse()
         this.scope.declareStatement(nameToken, axiom, false)
     }
 
@@ -236,7 +235,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
             MasTokenType.EQUALS -> {
                 val expressionResult = this.parseTheoremExpression(nameToken.name, true)
 
-                val stabilizedResult = stabilizeOpenTheorem(expressionResult)
+                val stabilizedResult = this.statementManager.stabilizeOpenTheorem(expressionResult)
                 this.scope.declareStatement(nameToken, stabilizedResult, isPrivate)
             }
             else -> throw this.addError(nextToken, "Expected = after theorem name")
@@ -319,7 +318,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
 
     /// THEOREM PARSING
-    private fun parseTheoremExpression(name: String, requireEndOfLine: Boolean): MutableMathAsmStatement {
+    private fun parseTheoremExpression(name: String, requireEndOfLine: Boolean): MathAsmStatement {
         this.resolveImports()
 
         val baseId = this.requireIdentifier()
@@ -343,7 +342,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         return currentTarget
     }
 
-    private fun parseTransformation(target: MutableMathAsmStatement, name: String): MutableMathAsmStatement {
+    private fun parseTransformation(target: MathAsmStatement, name: String): MathAsmStatement {
         val methodName = this.requireIdentifier()
         when (methodName.name) {
             "all" -> {
@@ -351,43 +350,43 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
                 val baseParameter = this.parseTheoremExpression(ANONYMOUS_EXPRESSION_NAME, false)
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_CLOSE)
 
-                return replaceAll(target, baseParameter, this.logicSelection, name)
+                return statementManager.replaceAll(target, baseParameter, name)
             }
             "right" -> return this.parseSentenceOrSingleReplacement(target, StatementSide.RIGHT, name)
             "left" -> return this.parseSentenceOrSingleReplacement(target, StatementSide.LEFT, name)
             "reverse" -> {
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_CLOSE)
-                return revertStatement(target)
+                return this.statementManager.revertStatement(target)
             }
             "cloneLeft" -> {
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_CLOSE)
-                return startTheorem(name, target, StatementSide.LEFT)
+                return this.statementManager.startTheorem(name, target, StatementSide.LEFT)
             }
             "cloneRight" -> {
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_CLOSE)
-                return startTheorem(name, target, StatementSide.RIGHT)
+                return this.statementManager.startTheorem(name, target, StatementSide.RIGHT)
             }
             else -> throw this.addError(methodName, "Unknown function ${methodName.name}")
         }
     }
 
-    private fun parseSentenceOrSingleReplacement(target: MutableMathAsmStatement, side: StatementSide, name: String): MutableMathAsmStatement {
+    private fun parseSentenceOrSingleReplacement(target: MathAsmStatement, side: StatementSide, name: String): MathAsmStatement {
         this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
         val base = this.parseTheoremExpression(ANONYMOUS_EXPRESSION_NAME, false)
 
         val nextToken = this.getNextNonNL()
         return when (nextToken.type) {
             MasTokenType.PARENTHESIS_CLOSE -> {
-                replaceAllInSentence(target, side, base, this.logicSelection, name)
+                this.statementManager.replaceAllInSentence(target, side, base, name)
             }
 
             MasTokenType.COMMA -> {
                 val position = this.parsePosition()
                 this.requireTokenOfType(MasTokenType.PARENTHESIS_CLOSE)
-                replaceSingleMatch(target, side, position, base, this.logicSelection, name)
+                this.statementManager.replaceSingleMatch(target, side, position, base, name)
             }
 
             else -> throw this.addError(nextToken, "Expected , or ), but found ${nextToken.getTextRepresentation()}")
@@ -404,7 +403,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         if (this.hasResolvedImports) return
 
         val repositoryImports = this.scope.createImportGroup()
-        val result = ResolveImports(this.stmtRepo, this.theoryId)
+        val result = ResolveImports(this.stmtRepo, this.theoryId, this.statementManager)
                 .resolve(repositoryImports.values, this.symbolMap, this.inspections)
         result.forEach { (localName, importData) -> this.scope.resolveImport(localName, importData) }
 

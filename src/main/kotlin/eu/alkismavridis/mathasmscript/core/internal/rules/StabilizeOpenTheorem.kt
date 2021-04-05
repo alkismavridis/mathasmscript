@@ -1,8 +1,8 @@
-package eu.alkismavridis.mathasmscript.core.rules
+package eu.alkismavridis.mathasmscript.core.internal.rules
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.MathAsmException
+import eu.alkismavridis.mathasmscript.core.internal.MutableMathAsmStatement
 
 class StabilizeTheoremException(message:String) : MathAsmException(message)
 

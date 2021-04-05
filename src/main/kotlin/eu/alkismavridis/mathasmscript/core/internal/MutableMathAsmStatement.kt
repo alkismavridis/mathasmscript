@@ -1,33 +1,22 @@
-package eu.alkismavridis.mathasmscript.core
+package eu.alkismavridis.mathasmscript.core.internal
 
-import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
+import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.core.SymbolMapper
 
 class MutableMathAsmStatement(
         override val name:String,
         override val type: StatementType,
-        left: MathAsmExpression,
-        right: MathAsmExpression,
+        val left: MathAsmExpression,
+        val right: MathAsmExpression,
         val isBidirectional: Boolean,
         val grade: Int = 0
 ) : MathAsmStatement {
-    var left: MathAsmExpression = left; private set
-    var right: MathAsmExpression = right; private set
-
-
-    /// MODIFIERS
     fun saveSpace() {
         this.left.saveSpace()
         this.right.saveSpace()
     }
 
-    fun reverse() {
-        val tmp = this.left
-        this.left = this.right
-        this.right = tmp
-    }
-
-
-    /// SERIALIZATION
     override fun toStatementString(mapper: SymbolMapper) : String {
         val builder = StringBuilder()
         for (i in 0 until this.left.length) {

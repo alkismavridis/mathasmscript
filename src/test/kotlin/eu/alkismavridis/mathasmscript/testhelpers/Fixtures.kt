@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.testhelpers
 
-import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
+import eu.alkismavridis.mathasmscript.core.internal.MutableMathAsmStatement
 
 class Fixtures {
     companion object {
