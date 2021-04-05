@@ -1,13 +1,13 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
-import eu.alkismavridis.mathasmscript.core.MathAsmExpression
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.internal.IllegalTheoremStartException
+import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
 import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
 
-fun startTheorem(name:String, base: MathAsmStatement, side: StatementSide) : MathAsmStatement {
+fun startTheorem(name:String, base: MutableMathAsmStatement, side: StatementSide) : MutableMathAsmStatement {
     assertStartValidity(base, side)
 
     val left: MathAsmExpression
@@ -29,7 +29,7 @@ fun startTheorem(name:String, base: MathAsmStatement, side: StatementSide) : Mat
         }
     }
 
-    return MathAsmStatement(
+    return MutableMathAsmStatement(
             name,
             StatementType.OPEN_THEOREM,
             left,
@@ -39,7 +39,7 @@ fun startTheorem(name:String, base: MathAsmStatement, side: StatementSide) : Mat
     )
 }
 
-private fun assertStartValidity(base: MathAsmStatement, side: StatementSide) {
+private fun assertStartValidity(base: MutableMathAsmStatement, side: StatementSide) {
     assertBaseLegality(base.type)
     if (side == StatementSide.RIGHT && !base.isBidirectional) {
         throw IllegalTheoremStartException("Cannot clone right side of unidirectional base ${base.name}")

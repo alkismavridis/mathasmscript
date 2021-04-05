@@ -1,6 +1,7 @@
 package eu.alkismavridis.mathasmscript.core
 
 import eu.alkismavridis.mathasmscript.core.internal.ExpressionSelection
+import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

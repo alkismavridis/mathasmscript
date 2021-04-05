@@ -1,12 +1,12 @@
 package eu.alkismavridis.mathasmscript.testhelpers
 
-import eu.alkismavridis.mathasmscript.core.MathAsmExpression
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.core.internal.MathAsmExpression
 
 class Fixtures {
     companion object {
-        fun createBase(isBidirectional: Boolean, grade:Int, type: StatementType) = MathAsmStatement(
+        fun createBase(isBidirectional: Boolean, grade:Int, type: StatementType) = MutableMathAsmStatement(
                 "someBase",
                 type,
                 MathAsmExpression(longArrayOf(1,4), false),
@@ -15,7 +15,7 @@ class Fixtures {
                 grade
         )
 
-        fun createReverseBase(isBidirectional: Boolean, grade:Int, type: StatementType) = MathAsmStatement(
+        fun createReverseBase(isBidirectional: Boolean, grade:Int, type: StatementType) = MutableMathAsmStatement(
                 "someReversedBase",
                 type,
                 MathAsmExpression(longArrayOf(9,3,9), false),
@@ -24,7 +24,7 @@ class Fixtures {
                 grade
         )
 
-        fun createTarget(isBidirectional: Boolean, grade:Int, type: StatementType) = MathAsmStatement(
+        fun createTarget(isBidirectional: Boolean, grade:Int, type: StatementType) = MutableMathAsmStatement(
                 "someTarget",
                 type,
                 MathAsmExpression(longArrayOf(5, 4, 1, 4, 4, 9, 3, 9, 1, 4, 6), false),

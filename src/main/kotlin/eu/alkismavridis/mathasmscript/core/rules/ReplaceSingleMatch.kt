@@ -1,13 +1,13 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.LogicSelection
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.internal.IllegalSingleReplacementException
 import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
 import eu.alkismavridis.mathasmscript.core.internal.getOpenTheorem
 
-fun replaceSingleMatch(target: MathAsmStatement, sideToEdit: StatementSide, positionToReplace:Int, base: MathAsmStatement, sel: LogicSelection, nameForClones:String) : MathAsmStatement {
+fun replaceSingleMatch(target: MutableMathAsmStatement, sideToEdit: StatementSide, positionToReplace:Int, base: MutableMathAsmStatement, sel: LogicSelection, nameForClones:String) : MutableMathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)
     assertReplaceOneLegality(targetToEdit, sideToEdit, positionToReplace, base)
 
@@ -29,7 +29,7 @@ fun replaceSingleMatch(target: MathAsmStatement, sideToEdit: StatementSide, posi
 }
 
 
-private fun assertReplaceOneLegality(target: MathAsmStatement, sideToEdit: StatementSide, positionToReplace:Int, base: MathAsmStatement) {
+private fun assertReplaceOneLegality(target: MutableMathAsmStatement, sideToEdit: StatementSide, positionToReplace:Int, base: MutableMathAsmStatement) {
     assertBaseLegality(base.type)
 
     if (base.grade != 0) {

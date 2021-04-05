@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
 import eu.alkismavridis.mathasmscript.core.LogicSelection
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.StatementType
 import eu.alkismavridis.mathasmscript.core.rules.*
@@ -29,7 +29,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
     private val scope = MasScope(null, inspections)
     private val symbolMap = SymbolMap()
     private var rolledBackToken: MasToken? = null
-    private var logicSelection = LogicSelection(100)
+    private val logicSelection = LogicSelection(100)
 
     private var hasResolvedImports = false
     private var hasDeclaredTheorem = false
@@ -319,7 +319,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
 
     /// THEOREM PARSING
-    private fun parseTheoremExpression(name: String, requireEndOfLine: Boolean): MathAsmStatement {
+    private fun parseTheoremExpression(name: String, requireEndOfLine: Boolean): MutableMathAsmStatement {
         this.resolveImports()
 
         val baseId = this.requireIdentifier()
@@ -343,7 +343,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         return currentTarget
     }
 
-    private fun parseTransformation(target: MathAsmStatement, name: String): MathAsmStatement {
+    private fun parseTransformation(target: MutableMathAsmStatement, name: String): MutableMathAsmStatement {
         val methodName = this.requireIdentifier()
         when (methodName.name) {
             "all" -> {
@@ -374,7 +374,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         }
     }
 
-    private fun parseSentenceOrSingleReplacement(target: MathAsmStatement, side: StatementSide, name: String): MathAsmStatement {
+    private fun parseSentenceOrSingleReplacement(target: MutableMathAsmStatement, side: StatementSide, name: String): MutableMathAsmStatement {
         this.requireTokenOfType(MasTokenType.PARENTHESIS_OPEN)
         val base = this.parseTheoremExpression(ANONYMOUS_EXPRESSION_NAME, false)
 

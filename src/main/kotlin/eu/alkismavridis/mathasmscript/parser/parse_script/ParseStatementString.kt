@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MathAsmExpression
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.core.rules.createAxiom
 import eu.alkismavridis.mathasmscript.parser.ParserException
 import eu.alkismavridis.mathasmscript.parser.SymbolMap
 import java.io.Reader
@@ -24,7 +24,7 @@ class ParseStatementString(
     private var right = mutableListOf<Long>()
 
 
-    fun parse() : MathAsmStatement {
+    fun parse() : MutableMathAsmStatement {
         while (true) {
             val firstChar = readNextNonWhiteNorNewLine()
 
@@ -39,7 +39,7 @@ class ParseStatementString(
 
 
     /// STATEMENT BUILDING
-    private fun commitAxiomCreation() : MathAsmStatement {
+    private fun commitAxiomCreation() : MutableMathAsmStatement {
         if(this.grade == -1) {
             throw ParseAxiomException("Cannot create an axiom ${this.name} without a connection")
         }
@@ -52,14 +52,13 @@ class ParseStatementString(
             throw ParseAxiomException("Right sentence cannot be empty")
         }
 
-        return MathAsmStatement(
+        return createAxiom(
                 this.name,
                 this.type,
-                MathAsmExpression(this.left.toLongArray(), false),
-                MathAsmExpression(this.right.toLongArray(), false),
+                this.left.toLongArray(),
+                this.right.toLongArray(),
                 this.isBidirectional,
                 this.grade
-
         )
     }
 

@@ -1,6 +1,4 @@
-package eu.alkismavridis.mathasmscript.core
-
-import eu.alkismavridis.mathasmscript.core.internal.ExpressionSelection
+package eu.alkismavridis.mathasmscript.core.internal
 
 
 class MathAsmExpression {
@@ -34,31 +32,31 @@ class MathAsmExpression {
 
     fun select(searchTerm: MathAsmExpression, sel: ExpressionSelection) {
         val words2: LongArray = searchTerm.words
-        val phrsLen: Int = searchTerm.length
+        val expressionLength: Int = searchTerm.length
         val first = words2[0]
 
-        var srchIndex = 0
-        var srchTester: Int
-        val srcLimit: Int = length - phrsLen
+        var searchIndex = 0
+        var searchTester: Int
+        val srcLimit: Int = length - expressionLength
 
         sel.clear()
         A@ while (true) {
             B@ while (true) {                    //1. search for first symbol
-                if (srchIndex > srcLimit) break@A
-                if (words[srchIndex] == first) break@B    //symbol found!
-                srchIndex += 1
+                if (searchIndex > srcLimit) break@A
+                if (words[searchIndex] == first) break@B    //symbol found!
+                searchIndex += 1
             }
 
-            srchTester = srchIndex + 1
-            for (index in 1 until phrsLen) {            //2. check other symbols
-                if (words[srchTester] != words2[index]) {
-                    srchIndex++
+            searchTester = searchIndex + 1
+            for (index in 1 until expressionLength) {            //2. check other symbols
+                if (words[searchTester] != words2[index]) {
+                    searchIndex++
                     continue@A  //if failed to match, move the pointer one step and start again.
-                } else srchTester++
+                } else searchTester++
             }
 
-            sel.add(srchIndex)
-            srchIndex = srchTester //move the pointer to the next search point
+            sel.add(searchIndex)
+            searchIndex = searchTester //move the pointer to the next search point
         }
     }
 

@@ -1,14 +1,14 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
 import eu.alkismavridis.mathasmscript.core.LogicSelection
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementSide
 import eu.alkismavridis.mathasmscript.core.internal.IllegalSentenceReplacementException
 import eu.alkismavridis.mathasmscript.core.internal.assertBaseLegality
 import eu.alkismavridis.mathasmscript.core.internal.assertStatementMutability
 import eu.alkismavridis.mathasmscript.core.internal.getOpenTheorem
 
-fun replaceAllInSentence(target: MathAsmStatement, sideToEdit: StatementSide, base: MathAsmStatement, sel: LogicSelection, nameForClones:String) : MathAsmStatement {
+fun replaceAllInSentence(target: MutableMathAsmStatement, sideToEdit: StatementSide, base: MutableMathAsmStatement, sel: LogicSelection, nameForClones:String) : MutableMathAsmStatement {
     val targetToEdit = getOpenTheorem(target, nameForClones)
     assertReplaceSentenceLegality(targetToEdit, sideToEdit, base)
 
@@ -30,7 +30,7 @@ fun replaceAllInSentence(target: MathAsmStatement, sideToEdit: StatementSide, ba
 
 
 /** Asserts the legality of move types MoveType_REPLACE_LEFT and MoveType_REPLACE_RIGHT */
-private fun assertReplaceSentenceLegality(target: MathAsmStatement, sideToEdit: StatementSide, base: MathAsmStatement) {
+private fun assertReplaceSentenceLegality(target: MutableMathAsmStatement, sideToEdit: StatementSide, base: MutableMathAsmStatement) {
     assertBaseLegality(base.type)
     assertStatementMutability(target.type)
 

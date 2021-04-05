@@ -1,9 +1,9 @@
 package eu.alkismavridis.mathasmscript.core.rules
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.internal.IllegalDirectionException
 
-fun revertStatement(target: MathAsmStatement) : MathAsmStatement {
+fun revertStatement(target: MutableMathAsmStatement) : MutableMathAsmStatement {
     if (!target.isBidirectional) {
         throw IllegalDirectionException("Unidirectional base ${target.name} cannot be reverted")
     }
@@ -13,7 +13,7 @@ fun revertStatement(target: MathAsmStatement) : MathAsmStatement {
         return target
     } else {
         //make a shallow copy
-        return MathAsmStatement(
+        return MutableMathAsmStatement(
                 target.name,
                 target.type,
                 target.right,

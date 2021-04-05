@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
@@ -9,7 +9,7 @@ import java.io.StringReader
 import java.util.stream.Collectors
 
 class ResolvedImport(
-        val statement: MathAsmStatement,
+        val statement: MutableMathAsmStatement,
         val fixesStatement: FixedMasStatement,
         val externalUrl: String
 )

@@ -1,13 +1,12 @@
 package eu.alkismavridis.mathasmscript.core.internal
 
-import eu.alkismavridis.mathasmscript.core.MathAsmExpression
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.core.MutableMathAsmStatement
 import eu.alkismavridis.mathasmscript.core.StatementType
 
-fun getOpenTheorem(target: MathAsmStatement, nameForClones:String) : MathAsmStatement {
+fun getOpenTheorem(target: MutableMathAsmStatement, nameForClones:String) : MutableMathAsmStatement {
     return if (target.type.canChange)
         target else
-        MathAsmStatement(
+        MutableMathAsmStatement(
             nameForClones,
             StatementType.OPEN_THEOREM,
             MathAsmExpression(target.left),
