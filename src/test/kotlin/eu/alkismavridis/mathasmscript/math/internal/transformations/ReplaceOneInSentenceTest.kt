@@ -3,7 +3,7 @@ package eu.alkismavridis.mathasmscript.math.internal.transformations
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.math.internal.model.LogicSelection
-import eu.alkismavridis.mathasmscript.math.internal.utils.IllegalBaseException
+import eu.alkismavridis.mathasmscript.math.internal.model.MathAsmException
 import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -113,7 +113,7 @@ internal class ReplaceOneInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 0, StatementType.HYPOTHESIS)
         assertThatThrownBy{ handleSingleMatchReplacement(target, StatementSide.LEFT, 2, base, LogicSelection(5), "cloneName") }
-                .isExactlyInstanceOf(IllegalBaseException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Statement of type HYPOTHESIS cannot be used as a base")
     }
 
@@ -122,7 +122,7 @@ internal class ReplaceOneInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 1, StatementType.AXIOM)
         assertThatThrownBy{ handleSingleMatchReplacement(target, StatementSide.LEFT, 2, base, LogicSelection(5), "cloneName") }
-                .isExactlyInstanceOf(IllegalSingleReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Only zero-grade bases can be used for single replacement, but someBase had 1")
     }
 
@@ -131,7 +131,7 @@ internal class ReplaceOneInSentenceTest {
         val target = Fixtures.createTarget(false, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 0, StatementType.AXIOM)
         assertThatThrownBy{ handleSingleMatchReplacement(target, StatementSide.LEFT, 2, base, LogicSelection(5), "cloneName") }
-                .isExactlyInstanceOf(IllegalSingleReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Cannot edit left side of unidirectional target someTarget")
     }
 
@@ -140,7 +140,7 @@ internal class ReplaceOneInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 0, StatementType.AXIOM)
         assertThatThrownBy{ handleSingleMatchReplacement(target, StatementSide.LEFT, 1, base, LogicSelection(5), "cloneName") }
-                .isExactlyInstanceOf(IllegalSingleReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Symbols did not match with base someBase: someTarget -> left side -> position 1")
     }
 
@@ -149,7 +149,7 @@ internal class ReplaceOneInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 0, StatementType.AXIOM)
         assertThatThrownBy{ handleSingleMatchReplacement(target, StatementSide.RIGHT, 3, base, LogicSelection(5), "cloneName") }
-                .isExactlyInstanceOf(IllegalSingleReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Symbols did not match with base someBase: someTarget -> right side -> position 3")
     }
 }

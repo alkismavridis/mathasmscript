@@ -42,8 +42,6 @@ fun handleTheoremStart(name:String, base: MutableMathAsmStatement, side: Stateme
 private fun assertStartValidity(base: MutableMathAsmStatement, side: StatementSide) {
     assertBaseLegality(base.type)
     if (side == StatementSide.RIGHT && !base.isBidirectional) {
-        throw IllegalTheoremStartException("Cannot clone right side of unidirectional base ${base.name}")
+        throw MathAsmException("Cannot clone right side of unidirectional base ${base.name}")
     }
 }
-
-class IllegalTheoremStartException(message:String) : MathAsmException(message)

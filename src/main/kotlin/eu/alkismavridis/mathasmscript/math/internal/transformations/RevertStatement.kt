@@ -5,7 +5,7 @@ import eu.alkismavridis.mathasmscript.math.internal.model.MutableMathAsmStatemen
 
 fun handleStatementRevert(target: MutableMathAsmStatement) : MutableMathAsmStatement {
     if (!target.isBidirectional) {
-        throw IllegalDirectionException("Unidirectional base ${target.name} cannot be reverted")
+        throw MathAsmException("Unidirectional base ${target.name} cannot be reverted")
     }
 
     return MutableMathAsmStatement(
@@ -17,5 +17,3 @@ fun handleStatementRevert(target: MutableMathAsmStatement) : MutableMathAsmState
             target.grade
     )
 }
-
-class IllegalDirectionException(message:String) : MathAsmException(message)

@@ -1,6 +1,7 @@
 package eu.alkismavridis.mathasmscript.math.internal.utils
 
 import eu.alkismavridis.mathasmscript.math.StatementType
+import eu.alkismavridis.mathasmscript.math.internal.model.MathAsmException
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -24,7 +25,7 @@ class AssertBaseLegalityTest {
     @Test
     fun assertBaseLegality_shouldThrowForHypothesis() {
         assertThatThrownBy{ assertBaseLegality(StatementType.HYPOTHESIS) }
-                .isExactlyInstanceOf(IllegalBaseException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Statement of type HYPOTHESIS cannot be used as a base")
     }
 }

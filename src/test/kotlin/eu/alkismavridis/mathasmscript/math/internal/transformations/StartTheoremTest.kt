@@ -2,14 +2,14 @@ package eu.alkismavridis.mathasmscript.math.internal.transformations
 
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
-import eu.alkismavridis.mathasmscript.math.internal.utils.IllegalBaseException
+import eu.alkismavridis.mathasmscript.math.internal.model.MathAsmException
 import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class StartTheoremTest {
-    /// successful casses
+    /// successful cases
     @Test
     fun startTheorem_shouldCloneValidBase() {
         val base = Fixtures.createBase(true, 4, StatementType.THEOREM)
@@ -65,7 +65,7 @@ internal class StartTheoremTest {
     fun startTheorem_shouldRejectIllegalBase() {
         val base = Fixtures.createBase(true, 4, StatementType.HYPOTHESIS)
         assertThatThrownBy{ handleTheoremStart("myOpenTheorem", base, StatementSide.RIGHT) }
-                .isExactlyInstanceOf(IllegalBaseException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Statement of type HYPOTHESIS cannot be used as a base")
     }
 
@@ -73,7 +73,7 @@ internal class StartTheoremTest {
     fun startTheorem_shouldRejectIllegalRightSideCloning() {
         val base = Fixtures.createBase(false, 4, StatementType.AXIOM)
         assertThatThrownBy{ handleTheoremStart("myOpenTheorem", base, StatementSide.RIGHT) }
-                .isExactlyInstanceOf(IllegalTheoremStartException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Cannot clone right side of unidirectional base someBase")
     }
 }

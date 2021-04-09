@@ -33,19 +33,17 @@ private fun assertReplaceOneLegality(target: MutableMathAsmStatement, sideToEdit
     assertBaseLegality(base.type)
 
     if (base.grade != 0) {
-        throw IllegalSingleReplacementException("Only zero-grade bases can be used for single replacement, but ${base.name} had ${base.grade}")
+        throw MathAsmException("Only zero-grade bases can be used for single replacement, but ${base.name} had ${base.grade}")
     }
 
     val toBeReplaced = base.left
     if (sideToEdit == StatementSide.LEFT) {
         if (!target.isBidirectional) {
-            throw IllegalSingleReplacementException("Cannot edit left side of unidirectional target ${target.name}")
+            throw MathAsmException("Cannot edit left side of unidirectional target ${target.name}")
         } else if (!target.left.match(toBeReplaced, positionToReplace)) {
-            throw IllegalSingleReplacementException("Symbols did not match with base ${base.name}: ${target.name} -> left side -> position $positionToReplace")
+            throw MathAsmException("Symbols did not match with base ${base.name}: ${target.name} -> left side -> position $positionToReplace")
         }
     } else if (!target.right.match(toBeReplaced, positionToReplace)) {
-        throw IllegalSingleReplacementException("Symbols did not match with base ${base.name}: ${target.name} -> right side -> position $positionToReplace")
+        throw MathAsmException("Symbols did not match with base ${base.name}: ${target.name} -> right side -> position $positionToReplace")
     }
 }
-
-class IllegalSingleReplacementException(message:String) : MathAsmException(message)

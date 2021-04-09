@@ -3,7 +3,7 @@ package eu.alkismavridis.mathasmscript.math.internal.transformations
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.math.internal.model.LogicSelection
-import eu.alkismavridis.mathasmscript.math.internal.utils.IllegalBaseException
+import eu.alkismavridis.mathasmscript.math.internal.model.MathAsmException
 import eu.alkismavridis.mathasmscript.testhelpers.Fixtures
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -147,7 +147,7 @@ internal class ReplaceAllInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(false, 0, StatementType.HYPOTHESIS)
         assertThatThrownBy{ replaceAllInSentence(target, StatementSide.LEFT, base, LogicSelection(5),"cloneName") }
-                .isExactlyInstanceOf(IllegalBaseException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Statement of type HYPOTHESIS cannot be used as a base")
     }
 
@@ -156,7 +156,7 @@ internal class ReplaceAllInSentenceTest {
         val target = Fixtures.createTarget(true, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(true, 2, StatementType.AXIOM)
         assertThatThrownBy{ replaceAllInSentence(target, StatementSide.LEFT, base, LogicSelection(5),"cloneName") }
-                .isExactlyInstanceOf(IllegalSentenceReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Cannot perform sentence-replacement because base \"someBase\" has larger grade than the target \"someTarget\"")
     }
 
@@ -165,7 +165,7 @@ internal class ReplaceAllInSentenceTest {
         val target = Fixtures.createTarget(false, 0, StatementType.OPEN_THEOREM)
         val base = Fixtures.createBase(true, 0, StatementType.AXIOM)
         assertThatThrownBy{ replaceAllInSentence(target, StatementSide.LEFT, base, LogicSelection(5),"cloneName") }
-                .isExactlyInstanceOf(IllegalSentenceReplacementException::class.java)
+                .isExactlyInstanceOf(MathAsmException::class.java)
                 .hasMessage("Cannot edit left sentence of unidirectional target someTarget")
     }
 }

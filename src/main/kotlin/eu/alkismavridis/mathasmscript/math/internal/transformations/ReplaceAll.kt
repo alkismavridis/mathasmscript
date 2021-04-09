@@ -32,10 +32,8 @@ private fun assertReplaceAllLegality(base: MutableMathAsmStatement, target: Muta
     assertStatementMutability(target.type)
 
     if (!target.isBidirectional && base.grade <= target.grade) {
-        throw IllegalReplaceAllException(
+        throw MathAsmException(
                 "Cannot use ${base.name} as a base to replace-all. Base's grade should ba larger than unidirectional target's. Found: base ${base.grade} - ${target.grade} target"
         )
     }
 }
-
-class IllegalReplaceAllException(message:String) : MathAsmException(message)

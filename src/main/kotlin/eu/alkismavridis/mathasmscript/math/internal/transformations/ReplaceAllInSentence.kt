@@ -35,12 +35,10 @@ private fun assertReplaceSentenceLegality(target: MutableMathAsmStatement, sideT
     assertStatementMutability(target.type)
 
     if (base.grade > target.grade) {
-        throw IllegalSentenceReplacementException("Cannot perform sentence-replacement because base \"${base.name}\" has larger grade than the target \"${target.name}\"")
+        throw MathAsmException("Cannot perform sentence-replacement because base \"${base.name}\" has larger grade than the target \"${target.name}\"")
     }
 
     if (sideToEdit == StatementSide.LEFT && !target.isBidirectional) {
-        throw IllegalSentenceReplacementException("Cannot edit left sentence of unidirectional target ${target.name}")
+        throw MathAsmException("Cannot edit left sentence of unidirectional target ${target.name}")
     }
 }
-
-class IllegalSentenceReplacementException(message:String) : MathAsmException(message)
