@@ -1,5 +1,7 @@
 package eu.alkismavridis.mathasmscript.persistence
 
+import eu.alkismavridis.mathasmscript.persistence.internal.JdbcUtils
+import eu.alkismavridis.mathasmscript.persistence.internal.SetManager
 import eu.alkismavridis.mathasmscript.repo.MasPackage
 import eu.alkismavridis.mathasmscript.repo.PackageRepository
 import org.springframework.jdbc.core.JdbcTemplate

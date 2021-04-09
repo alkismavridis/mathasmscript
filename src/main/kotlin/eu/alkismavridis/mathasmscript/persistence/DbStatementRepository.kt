@@ -1,5 +1,8 @@
 package eu.alkismavridis.mathasmscript.persistence
 
+import eu.alkismavridis.mathasmscript.persistence.internal.ChangeType
+import eu.alkismavridis.mathasmscript.persistence.internal.JdbcUtils
+import eu.alkismavridis.mathasmscript.persistence.internal.SetManager
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
 import eu.alkismavridis.mathasmscript.repo.FixedStatementType
 import eu.alkismavridis.mathasmscript.repo.StatementRepository

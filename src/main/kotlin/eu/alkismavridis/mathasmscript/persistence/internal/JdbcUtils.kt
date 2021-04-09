@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.persistence
+package eu.alkismavridis.mathasmscript.persistence.internal
 
 import org.springframework.jdbc.core.ConnectionCallback
 import org.springframework.jdbc.core.JdbcTemplate

@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.persistence
+package eu.alkismavridis.mathasmscript.persistence.internal
 
 enum class ChangeType {
     STATEMENT_MOVE,

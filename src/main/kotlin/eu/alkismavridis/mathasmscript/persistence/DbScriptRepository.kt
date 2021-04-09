@@ -1,5 +1,7 @@
 package eu.alkismavridis.mathasmscript.persistence
 
+import eu.alkismavridis.mathasmscript.persistence.internal.JdbcUtils
+import eu.alkismavridis.mathasmscript.persistence.internal.SetManager
 import eu.alkismavridis.mathasmscript.repo.MasScript
 import eu.alkismavridis.mathasmscript.repo.MasScriptImport
 import eu.alkismavridis.mathasmscript.repo.ScriptRepository
