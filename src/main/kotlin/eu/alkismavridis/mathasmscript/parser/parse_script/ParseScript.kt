@@ -1,9 +1,9 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
-import eu.alkismavridis.mathasmscript.core.StatementSide
-import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.math.MathAsmStatement
+import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
+import eu.alkismavridis.mathasmscript.math.StatementSide
+import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.tokens.MasTokenizer

@@ -1,8 +1,8 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
-import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.math.MathAsmStatement
+import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
+import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.parser.ParserException
 import eu.alkismavridis.mathasmscript.parser.SymbolMap
 import java.io.Reader

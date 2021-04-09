@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser.converters
 
-import eu.alkismavridis.mathasmscript.core.StatementType
+import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserException
 import eu.alkismavridis.mathasmscript.repo.FixedStatementType
 

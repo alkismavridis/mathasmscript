@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.parser
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
-import eu.alkismavridis.mathasmscript.core.MathasmStatementManager
+import eu.alkismavridis.mathasmscript.math.MathAsmStatement
+import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
 import eu.alkismavridis.mathasmscript.repo.FixedMasStatement

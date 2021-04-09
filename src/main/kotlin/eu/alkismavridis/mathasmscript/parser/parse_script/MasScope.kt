@@ -1,6 +1,6 @@
 package eu.alkismavridis.mathasmscript.parser.parse_script
 
-import eu.alkismavridis.mathasmscript.core.MathAsmStatement
+import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
