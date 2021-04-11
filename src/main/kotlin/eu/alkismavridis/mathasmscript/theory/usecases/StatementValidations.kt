@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.repo.validations
+package eu.alkismavridis.mathasmscript.theory.validations
 
 import java.util.regex.Pattern
 
@@ -13,18 +13,6 @@ fun isTheoremNameValid(name:String) : Boolean {
     return VALID_THEOREM_NAME_PATTERN.matcher(name).find()
 }
 
-fun assertTheoremNameValid(name: String) {
-    if (!isTheoremNameValid(name)) {
-        throw IllegalArgumentException(INVALID_THEOREM_NAME_MESSAGE)
-    }
-}
-
 fun isAxiomNameValid(name:String) : Boolean {
     return VALID_AXIOM_NAME_PATTERN.matcher(name).find()
-}
-
-fun assertAxiomNameValid(name: String) {
-    if (!isAxiomNameValid(name)) {
-        throw IllegalArgumentException(INVALID_AXIOM_NAME_MESSAGE)
-    }
 }

@@ -1,12 +1,10 @@
-package eu.alkismavridis.mathasmscript.repo.usecases
+package eu.alkismavridis.mathasmscript.theory.usecases
 
-import eu.alkismavridis.mathasmscript.repo.MasPackage
-import eu.alkismavridis.mathasmscript.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.theory.model.MasPackage
+import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
 import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.util.stream.Collectors
-
-private val log = LoggerFactory.getLogger("getOrCreatePackage")
 
 fun getOrCreatePackage(theoryId: Long, path:String, createdAt: Instant, repo: PackageRepository) : MasPackage {
     val parentNames = getParentNames(path)
@@ -55,3 +53,5 @@ private fun getPackageMap(theoryId: Long, paths:List<String>, repo: PackageRepos
 
     return result
 }
+
+private val log = LoggerFactory.getLogger("getOrCreatePackage")

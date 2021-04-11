@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.repo
+package eu.alkismavridis.mathasmscript.theory.model
 
 class PackageContent(
         val packageData: MasPackage,

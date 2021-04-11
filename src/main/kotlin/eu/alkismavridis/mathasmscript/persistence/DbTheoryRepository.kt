@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.persistence
 
-import eu.alkismavridis.mathasmscript.repo.Theory
-import eu.alkismavridis.mathasmscript.repo.TheoryRepository
+import eu.alkismavridis.mathasmscript.theory.model.Theory
+import eu.alkismavridis.mathasmscript.theory.repo.TheoryRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 import java.sql.ResultSet
@@ -28,6 +28,5 @@ class DbTheoryRepository(val jdbcTemplate: JdbcTemplate) : TheoryRepository {
     companion object {
         private const val TABLE_NAME = "THEORY"
         private const val ALL_COLUMNS = "ID, NAME, CREATED_AT"
-        private const val INSERT_STATEMENT = "INSERT INTO $TABLE_NAME ($ALL_COLUMNS) VALUES (?, ?, ?)"
     }
 }

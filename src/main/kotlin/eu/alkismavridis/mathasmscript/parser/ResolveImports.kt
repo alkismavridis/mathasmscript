@@ -4,8 +4,8 @@ import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.parser.converters.toStatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseStatementString
-import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
-import eu.alkismavridis.mathasmscript.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import java.io.StringReader
 import java.util.stream.Collectors
 

@@ -2,7 +2,7 @@ package eu.alkismavridis.mathasmscript.parser.converters
 
 import eu.alkismavridis.mathasmscript.math.StatementType
 import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserException
-import eu.alkismavridis.mathasmscript.repo.FixedStatementType
+import eu.alkismavridis.mathasmscript.theory.model.FixedStatementType
 
 fun StatementType.toFixedStatementType() : FixedStatementType {
     return when(this) {

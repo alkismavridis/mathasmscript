@@ -2,11 +2,11 @@ package eu.alkismavridis.mathasmscript.api
 
 import eu.alkismavridis.mathasmscript.parser.ImportScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.repo.MasPackage
-import eu.alkismavridis.mathasmscript.repo.PackageRepository
-import eu.alkismavridis.mathasmscript.repo.ScriptRepository
-import eu.alkismavridis.mathasmscript.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.repo.usecases.createPackageUseCase
+import eu.alkismavridis.mathasmscript.theory.model.MasPackage
+import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.theory.repo.ScriptRepository
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.usecases.createPackage
 import graphql.kickstart.tools.GraphQLMutationResolver
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -23,7 +23,7 @@ class MutationResolver(
     }
 
     fun mkdir(name: String, parentPath: String, theoryId: Long) : MasPackage {
-        return createPackageUseCase(parentPath, name, theoryId, this.packageRepo)
+        return createPackage(parentPath, name, theoryId, this.packageRepo)
     }
 
     fun rmdir(path: String, theoryId: Long) : Boolean {

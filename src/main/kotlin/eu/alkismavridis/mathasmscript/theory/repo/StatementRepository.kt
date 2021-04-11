@@ -1,5 +1,6 @@
-package eu.alkismavridis.mathasmscript.repo
+package eu.alkismavridis.mathasmscript.theory.repo
 
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 import java.time.Instant
 
 interface StatementRepository {

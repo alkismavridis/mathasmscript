@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.repo.names
+package eu.alkismavridis.mathasmscript.theory.internal
 
 fun mergeNames(first: String, second: String) : String {
     return when {

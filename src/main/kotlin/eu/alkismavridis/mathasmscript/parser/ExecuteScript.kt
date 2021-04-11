@@ -4,8 +4,8 @@ import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserException
 import eu.alkismavridis.mathasmscript.parser.parse_script.ParseScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
 import eu.alkismavridis.mathasmscript.parser.result.ParserResultStatus
-import eu.alkismavridis.mathasmscript.repo.StatementRepository
-import eu.alkismavridis.mathasmscript.repo.usecases.findExistingStatements
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.usecases.findExistingStatements
 import org.slf4j.LoggerFactory
 import java.io.StringReader
 import java.util.*

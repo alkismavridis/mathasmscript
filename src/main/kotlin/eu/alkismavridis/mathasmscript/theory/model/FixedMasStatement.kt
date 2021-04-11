@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.repo
+package eu.alkismavridis.mathasmscript.theory.model
 
 class FixedMasStatement (
         val path:String,

@@ -1,8 +1,8 @@
-package eu.alkismavridis.mathasmscript.repo.usecases
+package eu.alkismavridis.mathasmscript.theory.usecases
 
-import eu.alkismavridis.mathasmscript.repo.PackageContent
-import eu.alkismavridis.mathasmscript.repo.PackageRepository
-import eu.alkismavridis.mathasmscript.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.model.PackageContent
+import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 
 fun getPackageContent(theoryId: Long, packageName: String, packageRepo: PackageRepository, stmtRepo: StatementRepository) : PackageContent {
     val targetPackage = packageRepo.find(packageName, theoryId) ?: throw IllegalArgumentException("$packageName does not exist")

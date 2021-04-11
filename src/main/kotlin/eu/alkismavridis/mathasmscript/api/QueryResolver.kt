@@ -2,9 +2,16 @@ package eu.alkismavridis.mathasmscript.api
 
 import eu.alkismavridis.mathasmscript.parser.ExecuteScript
 import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.repo.*
-import eu.alkismavridis.mathasmscript.repo.names.getPackageNameOf
-import eu.alkismavridis.mathasmscript.repo.usecases.getPackageContent
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
+import eu.alkismavridis.mathasmscript.theory.model.MasScript
+import eu.alkismavridis.mathasmscript.theory.model.PackageContent
+import eu.alkismavridis.mathasmscript.theory.model.Theory
+import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.theory.repo.ScriptRepository
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.repo.TheoryRepository
+import eu.alkismavridis.mathasmscript.theory.usecases.getPackageContent
+import eu.alkismavridis.mathasmscript.theory.usecases.getPackageName
 import graphql.kickstart.tools.GraphQLQueryResolver
 import org.springframework.stereotype.Component
 
@@ -24,7 +31,7 @@ class QueryResolver(
     }
 
     fun lsParent(theoryId: Long, packageName: String): PackageContent {
-        val parentName = getPackageNameOf(packageName)
+        val parentName = getPackageName(packageName)
         return getPackageContent(theoryId, parentName, this.packageRepo, this.stmtRepo)
     }
 

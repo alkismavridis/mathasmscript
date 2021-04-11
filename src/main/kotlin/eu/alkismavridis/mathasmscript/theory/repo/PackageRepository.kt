@@ -1,4 +1,6 @@
-package eu.alkismavridis.mathasmscript.repo
+package eu.alkismavridis.mathasmscript.theory.repo
+
+import eu.alkismavridis.mathasmscript.theory.model.MasPackage
 
 interface PackageRepository {
     fun find(fullName: String, theoryId: Long) : MasPackage?

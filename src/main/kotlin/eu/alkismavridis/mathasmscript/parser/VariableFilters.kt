@@ -2,8 +2,8 @@ package eu.alkismavridis.mathasmscript.parser
 
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
-import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
-import eu.alkismavridis.mathasmscript.repo.MasScriptImport
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
+import eu.alkismavridis.mathasmscript.theory.model.MasScriptImport
 
 fun extractExportedValues(variables: Collection<MasVariable>) : List<FixedMasStatement> {
     return variables
@@ -20,6 +20,7 @@ fun extractImports(variables: Collection<MasVariable>) : List<MasScriptImport> {
             .map { MasScriptImport(
                 it.value.id,
                 if (it.value.path.isEmpty()) "" else "${it.value.path} -> ${it.importUrl}"
-            )}
+            )
+            }
             .toList()
 }

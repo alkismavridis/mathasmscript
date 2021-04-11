@@ -5,7 +5,7 @@ import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
 import eu.alkismavridis.mathasmscript.parser.result.MasVariable
 import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
-import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 
 
 class MasScope(private val parent: MasScope?, private val inspections: MathasmInspections) {

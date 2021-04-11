@@ -2,9 +2,9 @@ package eu.alkismavridis.mathasmscript.persistence
 
 import eu.alkismavridis.mathasmscript.persistence.internal.JdbcUtils
 import eu.alkismavridis.mathasmscript.persistence.internal.SetManager
-import eu.alkismavridis.mathasmscript.repo.MasScript
-import eu.alkismavridis.mathasmscript.repo.MasScriptImport
-import eu.alkismavridis.mathasmscript.repo.ScriptRepository
+import eu.alkismavridis.mathasmscript.theory.model.MasScript
+import eu.alkismavridis.mathasmscript.theory.model.MasScriptImport
+import eu.alkismavridis.mathasmscript.theory.repo.ScriptRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.ResultSetExtractor
 import org.springframework.stereotype.Component

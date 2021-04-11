@@ -3,9 +3,9 @@ package eu.alkismavridis.mathasmscript.persistence
 import eu.alkismavridis.mathasmscript.persistence.internal.ChangeType
 import eu.alkismavridis.mathasmscript.persistence.internal.JdbcUtils
 import eu.alkismavridis.mathasmscript.persistence.internal.SetManager
-import eu.alkismavridis.mathasmscript.repo.FixedMasStatement
-import eu.alkismavridis.mathasmscript.repo.FixedStatementType
-import eu.alkismavridis.mathasmscript.repo.StatementRepository
+import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
+import eu.alkismavridis.mathasmscript.theory.model.FixedStatementType
+import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.ResultSetExtractor

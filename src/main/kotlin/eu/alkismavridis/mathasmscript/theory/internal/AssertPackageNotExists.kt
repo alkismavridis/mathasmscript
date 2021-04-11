@@ -1,6 +1,6 @@
-package eu.alkismavridis.mathasmscript.repo.usecases
+package eu.alkismavridis.mathasmscript.theory.internal
 
-import eu.alkismavridis.mathasmscript.repo.PackageRepository
+import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
 
 fun assertPackageNotExists(path: String, theoryId: Long, packageRepo: PackageRepository) {
     val alreadyExistingPackage = packageRepo.find(path, theoryId)
