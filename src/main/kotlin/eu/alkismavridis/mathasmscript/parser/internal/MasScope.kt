@@ -1,10 +1,11 @@
-package eu.alkismavridis.mathasmscript.parser.parse_script
+package eu.alkismavridis.mathasmscript.parser.internal
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.parser.*
-import eu.alkismavridis.mathasmscript.parser.converters.toFixedStatementType
-import eu.alkismavridis.mathasmscript.parser.result.MasVariable
-import eu.alkismavridis.mathasmscript.parser.result.MasVariableKind
+import eu.alkismavridis.mathasmscript.parser.internal.*
+import eu.alkismavridis.mathasmscript.parser.internal.converters.toFixedStatementType
+import eu.alkismavridis.mathasmscript.parser.model.MasVariable
+import eu.alkismavridis.mathasmscript.parser.model.MasVariableKind
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 
 

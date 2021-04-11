@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser.result
+package eu.alkismavridis.mathasmscript.parser.model
 
 enum class InspectionType {
     /** Indicates internal errors of the MasServer, not error in the script. */

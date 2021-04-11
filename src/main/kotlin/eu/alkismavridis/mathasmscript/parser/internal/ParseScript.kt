@@ -1,12 +1,10 @@
-package eu.alkismavridis.mathasmscript.parser.parse_script
+package eu.alkismavridis.mathasmscript.parser.internal
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
-import eu.alkismavridis.mathasmscript.parser.*
-import eu.alkismavridis.mathasmscript.parser.result.MasVariable
-import eu.alkismavridis.mathasmscript.parser.tokens.MasTokenizer
+import eu.alkismavridis.mathasmscript.parser.model.MasVariable
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.theory.validations.*
 import java.io.Reader
@@ -17,8 +15,6 @@ class MasParserResult(
         val packageName: String,
         val variables: Collection<MasVariable>
 )
-
-private class TokenLineInfo(val linesBeforeToken: Int, val token: MasToken)
 
 class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
     private val tokenizer = MasTokenizer(reader, this.inspections)
@@ -421,3 +417,5 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
         private const val ANONYMOUS_EXPRESSION_NAME = "AnonymousExpression"
     }
 }
+
+private class TokenLineInfo(val linesBeforeToken: Int, val token: MasToken)

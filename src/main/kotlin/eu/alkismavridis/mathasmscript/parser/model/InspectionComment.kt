@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser.result
+package eu.alkismavridis.mathasmscript.parser.model
 
 class InspectionComment(
         val line:Int,

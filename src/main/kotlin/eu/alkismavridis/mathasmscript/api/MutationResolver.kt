@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.api
 
-import eu.alkismavridis.mathasmscript.parser.ImportScript
-import eu.alkismavridis.mathasmscript.parser.result.ParserResult
+import eu.alkismavridis.mathasmscript.parser.model.ParserResult
+import eu.alkismavridis.mathasmscript.parser.usecases.ImportScript
 import eu.alkismavridis.mathasmscript.theory.model.MasPackage
 import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.theory.repo.ScriptRepository

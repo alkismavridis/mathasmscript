@@ -1,9 +1,8 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.usecases
 
-import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserResult
-import eu.alkismavridis.mathasmscript.parser.parse_script.ParseScript
-import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.parser.result.ParserResultStatus
+import eu.alkismavridis.mathasmscript.parser.internal.*
+import eu.alkismavridis.mathasmscript.parser.model.ParserResult
+import eu.alkismavridis.mathasmscript.parser.model.ParserResultStatus
 import eu.alkismavridis.mathasmscript.theory.model.MasScript
 import eu.alkismavridis.mathasmscript.theory.repo.PackageRepository
 import eu.alkismavridis.mathasmscript.theory.repo.ScriptRepository

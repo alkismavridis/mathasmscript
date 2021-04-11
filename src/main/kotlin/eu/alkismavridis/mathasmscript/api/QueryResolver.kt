@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.api
 
-import eu.alkismavridis.mathasmscript.parser.ExecuteScript
-import eu.alkismavridis.mathasmscript.parser.result.ParserResult
+import eu.alkismavridis.mathasmscript.parser.model.ParserResult
+import eu.alkismavridis.mathasmscript.parser.usecases.ExecuteScript
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 import eu.alkismavridis.mathasmscript.theory.model.MasScript
 import eu.alkismavridis.mathasmscript.theory.model.PackageContent

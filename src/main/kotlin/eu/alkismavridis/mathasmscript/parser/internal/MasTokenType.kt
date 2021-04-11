@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.internal
 
 enum class MasTokenType(val textRepresentation:String) {
     NAME("name"),

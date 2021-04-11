@@ -1,14 +1,10 @@
-package eu.alkismavridis.mathasmscript.parser.parse_script
+package eu.alkismavridis.mathasmscript.parser.internal
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementType
-import eu.alkismavridis.mathasmscript.parser.ParserException
-import eu.alkismavridis.mathasmscript.parser.SymbolMap
 import java.io.Reader
 
-
-class ParseAxiomException(message:String) : ParserException(message)
 
 class ParseStatementString(
         private val reader:Reader,
@@ -160,5 +156,8 @@ class ParseStatementString(
         return builder.toString()
     }
 }
+
+private class ParseAxiomException(message:String) : ParserException(message)
+
 
 

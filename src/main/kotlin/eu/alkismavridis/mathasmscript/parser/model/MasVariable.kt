@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser.result
+package eu.alkismavridis.mathasmscript.parser.model
 
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 

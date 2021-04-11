@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.internal
 
 class SymbolNotFoundException(message:String) : ParserException(message)
 

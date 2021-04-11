@@ -1,7 +1,7 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.internal
 
-import eu.alkismavridis.mathasmscript.parser.result.InspectionComment
-import eu.alkismavridis.mathasmscript.parser.result.InspectionType
+import eu.alkismavridis.mathasmscript.parser.model.InspectionComment
+import eu.alkismavridis.mathasmscript.parser.model.InspectionType
 
 class MathasmInspections {
     private val comments = mutableListOf<InspectionComment>()

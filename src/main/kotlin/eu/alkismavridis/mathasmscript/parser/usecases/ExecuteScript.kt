@@ -1,9 +1,11 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.usecases
 
-import eu.alkismavridis.mathasmscript.parser.parse_script.MasParserException
-import eu.alkismavridis.mathasmscript.parser.parse_script.ParseScript
-import eu.alkismavridis.mathasmscript.parser.result.ParserResult
-import eu.alkismavridis.mathasmscript.parser.result.ParserResultStatus
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
+import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
+import eu.alkismavridis.mathasmscript.parser.internal.ParseScript
+import eu.alkismavridis.mathasmscript.parser.internal.extractExportedValues
+import eu.alkismavridis.mathasmscript.parser.model.ParserResult
+import eu.alkismavridis.mathasmscript.parser.model.ParserResultStatus
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.theory.usecases.findExistingStatements
 import org.slf4j.LoggerFactory

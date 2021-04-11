@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser
+package eu.alkismavridis.mathasmscript.parser.internal
 
 
 class MasRepositoryImports(val url:String, val line:Int, val column:Int) {

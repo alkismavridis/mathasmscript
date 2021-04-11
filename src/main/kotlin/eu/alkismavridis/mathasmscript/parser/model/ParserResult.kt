@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser.result
+package eu.alkismavridis.mathasmscript.parser.model
 
 class ParserResult(
         val status: ParserResultStatus,
@@ -8,8 +8,4 @@ class ParserResult(
         val comments: Collection<InspectionComment>
 )
 
-enum class ParserResultStatus {
-    ERROR,
-    EXECUTED,
-    IMPORTED
-}
+
