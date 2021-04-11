@@ -1,9 +1,9 @@
 package eu.alkismavridis.mathasmscript.parser.usecases
 
-import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
-import eu.alkismavridis.mathasmscript.parser.internal.ParseScript
 import eu.alkismavridis.mathasmscript.parser.internal.extractExportedValues
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParser
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import eu.alkismavridis.mathasmscript.parser.model.ParserResult
 import eu.alkismavridis.mathasmscript.parser.model.ParserResultStatus
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
@@ -20,7 +20,7 @@ class ExecuteScript(private val theoryId: Long, private val stmtRepo: StatementR
         var packageName = ""
 
         try {
-            val result = ParseScript(this.theoryId, StringReader(script), this.stmtRepo, inspections).run()
+            val result = MasParser(this.theoryId, StringReader(script), this.stmtRepo, inspections).parse()
             packageName = result.packageName
 
             val existingStatements = findExistingStatements(this.theoryId, extractExportedValues(result.variables), this.stmtRepo)

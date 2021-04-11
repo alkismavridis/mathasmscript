@@ -1,8 +1,13 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.scope
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
+import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
+import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
 import eu.alkismavridis.mathasmscript.parser.internal.converters.toStatementType
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
+import eu.alkismavridis.mathasmscript.parser.internal.parse.ParseStatementString
+import eu.alkismavridis.mathasmscript.parser.internal.token.NameToken
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import java.io.StringReader
@@ -41,7 +46,7 @@ class ResolveImports(
             if (localName == null) {
                 val message = "Internal error: Could not locate local name for full name ${it.path}"
                 parseLogger.error(-1, -1, message)
-                throw ParserException(message)
+                throw MasParserException(message)
             }
 
             val toStatement = ParseStatementString(StringReader(it.text), map, statementManager, localName.name, it.type.toStatementType(), '\u0000').parse()

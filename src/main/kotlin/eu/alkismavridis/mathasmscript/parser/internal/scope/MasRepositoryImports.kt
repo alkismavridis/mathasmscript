@@ -1,4 +1,6 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.scope
+
+import eu.alkismavridis.mathasmscript.parser.internal.token.NameToken
 
 
 class MasRepositoryImports(val url:String, val line:Int, val column:Int) {

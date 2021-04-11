@@ -1,9 +1,11 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.scope
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.parser.*
 import eu.alkismavridis.mathasmscript.parser.internal.*
 import eu.alkismavridis.mathasmscript.parser.internal.converters.toFixedStatementType
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
+import eu.alkismavridis.mathasmscript.parser.internal.token.NameToken
 import eu.alkismavridis.mathasmscript.parser.model.MasVariable
 import eu.alkismavridis.mathasmscript.parser.model.MasVariableKind
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
@@ -175,4 +177,4 @@ private class ImportDeclaration(val repoUrl: String, val fullName: String, local
     }
 }
 
-private class ScopeException(message: String) : ParserException(message)
+private class ScopeException(message: String) : MasParserException(message)

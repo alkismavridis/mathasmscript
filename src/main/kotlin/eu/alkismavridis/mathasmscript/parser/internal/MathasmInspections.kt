@@ -22,11 +22,6 @@ class MathasmInspections {
         this.comments.add(InspectionComment(line, column, message, InspectionType.WARNING))
     }
 
-    fun assertNoErrors() {
-        if (!this.hasErrors()) return
-        throw ParserException("Fatal errors were detected. Abort.")
-    }
-
     fun getEntries() : List<InspectionComment> {
         return this.comments
     }

@@ -1,6 +1,11 @@
 package eu.alkismavridis.mathasmscript.parser.usecases
 
-import eu.alkismavridis.mathasmscript.parser.internal.*
+import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
+import eu.alkismavridis.mathasmscript.parser.internal.extractExportedValues
+import eu.alkismavridis.mathasmscript.parser.internal.extractImports
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParser
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserResult
 import eu.alkismavridis.mathasmscript.parser.model.ParserResult
 import eu.alkismavridis.mathasmscript.parser.model.ParserResultStatus
 import eu.alkismavridis.mathasmscript.theory.model.MasScript
@@ -27,7 +32,7 @@ class ImportScript(
         var packageName = ""
 
         try {
-            val result = ParseScript(this.theoryId, StringReader(scriptText), this.stmtRepo, inspections).run()
+            val result = MasParser(this.theoryId, StringReader(scriptText), this.stmtRepo, inspections).parse()
             packageName = result.packageName
 
             this.assertResultValidity(result, inspections)
@@ -74,7 +79,7 @@ class ImportScript(
         if (exports.isEmpty()) {
             val errorMessage = "Script does not export anything. Aborting import process."
             inspections.error(errorMessage)
-            throw ParserException(errorMessage)
+            throw MasParserException(errorMessage)
         }
 
         val existingStatements = findExistingStatements(this.theoryId, exports, this.stmtRepo)

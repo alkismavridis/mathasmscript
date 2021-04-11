@@ -1,8 +1,9 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.parse
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementType
+import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
 import java.io.Reader
 
 
@@ -14,9 +15,9 @@ class ParseStatementString(
         private val type: StatementType,
         private val endingChar:Char) {
 
-    var rolledBackCharacter:Char? = null
-    var grade = -1
-    var isBidirectional = false
+    private var rolledBackCharacter:Char? = null
+    private var grade = -1
+    private var isBidirectional = false
     private var left = mutableListOf<Long>()
     private var right = mutableListOf<Long>()
 
@@ -157,7 +158,4 @@ class ParseStatementString(
     }
 }
 
-private class ParseAxiomException(message:String) : ParserException(message)
-
-
-
+private class ParseAxiomException(message:String) : MasParserException(message)

@@ -1,9 +1,14 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.parse
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
+import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
+import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
+import eu.alkismavridis.mathasmscript.parser.internal.scope.MasScope
+import eu.alkismavridis.mathasmscript.parser.internal.scope.ResolveImports
+import eu.alkismavridis.mathasmscript.parser.internal.token.*
 import eu.alkismavridis.mathasmscript.parser.model.MasVariable
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository
 import eu.alkismavridis.mathasmscript.theory.validations.*
@@ -16,7 +21,7 @@ class MasParserResult(
         val variables: Collection<MasVariable>
 )
 
-class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
+class MasParser(private val theoryId: Long, reader: Reader, private val stmtRepo: StatementRepository, private var inspections: MathasmInspections) {
     private val tokenizer = MasTokenizer(reader, this.inspections)
 
     /** Import statements are allowed before any proof or axiom definitions */
@@ -31,7 +36,7 @@ class ParseScript(private val theoryId: Long, reader: Reader, private val stmtRe
 
 
     /// STATEMENT PARSING
-    fun run(): MasParserResult {
+    fun parse(): MasParserResult {
         while (this.parseNextStatement()) { /* continue parsing until we hit the end */ }
         this.scope.assertAllImportsAreUsed()
 

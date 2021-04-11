@@ -1,4 +1,4 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.token
 
 open class MasToken(val type: MasTokenType, val line: Int, val column: Int) {
     open fun getTextRepresentation(): String {

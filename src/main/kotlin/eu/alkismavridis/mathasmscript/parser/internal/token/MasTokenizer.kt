@@ -1,5 +1,7 @@
-package eu.alkismavridis.mathasmscript.parser.internal
+package eu.alkismavridis.mathasmscript.parser.internal.token
 
+import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import java.io.Reader
 
 
@@ -205,4 +207,4 @@ class MasTokenizer(private val reader: Reader, private val logger: MathasmInspec
     }
 }
 
-class TokenizerException(message: String) : ParserException(message)
+open class TokenizerException(message: String) : MasParserException(message)

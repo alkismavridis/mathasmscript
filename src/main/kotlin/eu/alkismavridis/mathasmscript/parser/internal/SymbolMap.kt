@@ -1,15 +1,11 @@
 package eu.alkismavridis.mathasmscript.parser.internal
 
-class SymbolNotFoundException(message:String) : ParserException(message)
+import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 
 class SymbolMap {
     private val textToId = mutableMapOf<String, Long>()
     private val idToText = mutableMapOf<Long, String>()
     private var nextId = 1L
-
-
-    fun getSymbol(id:Long) = this.idToText[id]
-    fun getId(text:String) = this.textToId[text]
 
     fun getOrCreateId(text:String) : Long {
         val alreadyExisting = this.textToId[text]
@@ -30,3 +26,5 @@ class SymbolMap {
         throw SymbolNotFoundException("Symbol with id $id not found")
     }
 }
+
+private class SymbolNotFoundException(message:String) : MasParserException(message)
