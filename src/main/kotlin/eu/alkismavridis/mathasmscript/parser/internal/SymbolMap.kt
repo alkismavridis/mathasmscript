@@ -1,7 +1,5 @@
 package eu.alkismavridis.mathasmscript.parser.internal
 
-import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
-
 class SymbolMap {
     private val textToId = mutableMapOf<String, Long>()
     private val idToText = mutableMapOf<Long, String>()

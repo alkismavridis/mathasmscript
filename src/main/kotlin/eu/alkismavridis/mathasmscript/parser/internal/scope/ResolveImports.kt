@@ -2,11 +2,11 @@ package eu.alkismavridis.mathasmscript.parser.internal.scope
 
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
 import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
-import eu.alkismavridis.mathasmscript.parser.internal.converters.toStatementType
-import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.parse.ParseStatementString
+import eu.alkismavridis.mathasmscript.parser.internal.toStatementType
 import eu.alkismavridis.mathasmscript.parser.internal.token.NameToken
 import eu.alkismavridis.mathasmscript.theory.model.FixedMasStatement
 import eu.alkismavridis.mathasmscript.theory.repo.StatementRepository

@@ -1,10 +1,10 @@
 package eu.alkismavridis.mathasmscript.parser.usecases
 
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
 import eu.alkismavridis.mathasmscript.parser.internal.extractExportedValues
 import eu.alkismavridis.mathasmscript.parser.internal.extractImports
 import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParser
-import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserResult
 import eu.alkismavridis.mathasmscript.parser.model.ParserResult
 import eu.alkismavridis.mathasmscript.parser.model.ParserResultStatus

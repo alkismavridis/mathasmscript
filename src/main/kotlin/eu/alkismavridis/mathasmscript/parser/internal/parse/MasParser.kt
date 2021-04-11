@@ -4,6 +4,7 @@ import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementSide
 import eu.alkismavridis.mathasmscript.math.StatementType
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
 import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
 import eu.alkismavridis.mathasmscript.parser.internal.scope.MasScope

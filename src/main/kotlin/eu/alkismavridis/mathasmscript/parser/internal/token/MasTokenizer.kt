@@ -1,7 +1,7 @@
 package eu.alkismavridis.mathasmscript.parser.internal.token
 
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.MathasmInspections
-import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import java.io.Reader
 
 

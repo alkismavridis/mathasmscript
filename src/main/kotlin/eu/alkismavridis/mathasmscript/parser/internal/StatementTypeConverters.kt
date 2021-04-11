@@ -1,7 +1,6 @@
-package eu.alkismavridis.mathasmscript.parser.internal.converters
+package eu.alkismavridis.mathasmscript.parser.internal
 
 import eu.alkismavridis.mathasmscript.math.StatementType
-import eu.alkismavridis.mathasmscript.parser.internal.parse.MasParserException
 import eu.alkismavridis.mathasmscript.theory.model.FixedStatementType
 
 fun StatementType.toFixedStatementType() : FixedStatementType {

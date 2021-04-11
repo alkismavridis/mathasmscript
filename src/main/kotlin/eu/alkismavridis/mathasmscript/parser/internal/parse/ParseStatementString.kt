@@ -3,6 +3,7 @@ package eu.alkismavridis.mathasmscript.parser.internal.parse
 import eu.alkismavridis.mathasmscript.math.MathAsmStatement
 import eu.alkismavridis.mathasmscript.math.MathasmStatementManager
 import eu.alkismavridis.mathasmscript.math.StatementType
+import eu.alkismavridis.mathasmscript.parser.internal.MasParserException
 import eu.alkismavridis.mathasmscript.parser.internal.SymbolMap
 import java.io.Reader
 
@@ -106,7 +107,7 @@ class ParseStatementString(
                 throw ParseAxiomException("Grade of axiom ${this.name} is negative. Maybe one '-' too much?")
             }
             this.integrateConnection(gradeAsInt, isBidirectional)
-        } catch (e: NumberFormatException) {}
+        } catch (e: NumberFormatException) { /*To be expected for <--->*/ }
     }
 
 
