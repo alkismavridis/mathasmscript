@@ -14,8 +14,8 @@ class ParseStatementString(
         private val manager: MathasmStatementManager,
         private val name:String,
         private val type: StatementType,
-        private val endingChar:Char) {
-
+        private val endingChar:Char
+) {
     private var rolledBackCharacter:Char? = null
     private var grade = -1
     private var isBidirectional = false

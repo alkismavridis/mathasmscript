@@ -24,25 +24,28 @@ export default function ParsedResultPanel(props: Props) {
         )}
 
         <h5>Variables</h5>
-        <div className="parsed-result-panel__var-grid">
-            {props.data.variables.map(renderVariable)}
-        </div>
+        <section style={{display: "flex"}}>
+            <div className="parsed-result-panel__theory-image"/>
+            <div className="parsed-result-panel__var-grid">
+                {props.data.variables.map(renderVariable)}
+            </div>
+        </section>
     </section>;
 }
 
 function renderVariable(variable: MasVariable) : ReactElement {
-    return <>
+    return <React.Fragment key={variable.name}>
         {getVarKindSymbol(variable)}
         <div className="parsed-result-panel__var-type" data-type={variable.value.type}>{variable.name}</div>
         <div>{variable.value.text}</div>
-    </>;
+    </React.Fragment>;
 }
 
 function getVarKindSymbol(variable: MasVariable) : ReactElement {
     switch(variable.kind) {
-        case "IMPORT": return <div>🡆</div>;
-        case "EXPORT": return <div>🡄</div>;
-        case "LOCAL": return <div>✱</div>;
+        case "IMPORT": return <div title="Imported statement">🡆</div>;
+        case "EXPORT": return <div title="Exported statement">🡄</div>;
+        case "LOCAL": return <div/>;
         default: return <div>?</div>;
     }
 }

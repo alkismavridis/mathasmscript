@@ -3,30 +3,24 @@ import './App.scss';
 import Header from "../reusables/Header/Header";
 import UrlUtils from "../../utils/UrlUtils";
 import HomePage from "../pages/HomePage/HomePage";
-import HttpGraphqlRepository from "../../../io/HttpGraphqlRepository";
-import GraphqlRepository from "../../../entities/GraphqlRepository";
 import TheoryOverviewPage from "../pages/TheoryOverviewPage/TheoryOverviewPage";
 import ScriptCreationPage from "../pages/ScriptCreationPage/ScriptCreationPage";
-
-
-class DiContext {
-    constructor(public graphqlRepo: GraphqlRepository) {
-    }
-}
-
-const di = new DiContext(
-    new HttpGraphqlRepository("http://localhost:8080/graphql")
-);
-
-const AppContext = React.createContext(di);
+import Router from "../../utils/Router";
+import {RouterContext} from "../../utils/DiContext";
 
 function App() {
-    const [queryParams] = useState(() => UrlUtils.parseQueryParams(window.location.search));
-
-    return <AppContext.Provider value={di}>
+    const [, setUrl] = useState(window.location.href)
+    const [router] = useState(() =>  new Router(newUrl => {
+        window.history.replaceState(null, "", newUrl);
+        setUrl(newUrl);
+    }))
+    
+    const queryParams = UrlUtils.parseQueryParams(window.location.search);
+    
+    return <RouterContext.Provider value={router}>
         <Header/>
         {renderPageContent(queryParams)}
-    </AppContext.Provider>;
+    </RouterContext.Provider>;
 }
 
 function renderPageContent(queryParams: any) {
@@ -34,8 +28,8 @@ function renderPageContent(queryParams: any) {
 
     switch (pageName) {
         case "": return <HomePage/>;
-        case "theory-overview": return <TheoryOverviewPage theoryId={queryParams.id}/>;
-        case "create-script": return <ScriptCreationPage theoryId={queryParams.id}/>;
+        case "theory-overview": return <TheoryOverviewPage theoryId={queryParams.id} packageName={queryParams.package || ""}/>;
+        case "create-script": return <ScriptCreationPage theoryId={queryParams.theoryId} packageName={queryParams.package}/>;
         default: return <div>404 - Page Not found :(</div>;
     }
 }

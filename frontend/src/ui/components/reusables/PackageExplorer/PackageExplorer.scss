@@ -3,9 +3,16 @@
 }
 
 .package-explorer__package {
+  display: inline-block;
   margin: 8px;
   padding: 8px;
   background: orange;
   border-radius: 8px;
   cursor: pointer;
+  color: black;
+  text-decoration: none;
+  
+  &:visited {
+    color: black;
+  }
 }

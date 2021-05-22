@@ -1,23 +1,27 @@
 import React, {useContext, useEffect, useState} from "react";
 import PackageContent from "../../../../entities/model/PackageContent";
-import {GraphqlContext} from "../../../utils/DiContext";
+import {GraphqlContext, RouterContext} from "../../../utils/DiContext";
 
 import "./PackageExplorer.scss";
 import addNewPackage from "../../../../actions/AddNewPackage";
 import getFirstMessageOf from "../../../../actions/GetFirstMessageOfErrors";
 import StatementBox from "../StatementBox/StatementBox";
+import Link from "../Link";
+import Urls from "../../../utils/Urls";
 
 interface Props {
     theoryId: number,
-    onPackageChanged: (p: PackageContent) => void
+    packageName: string
 }
 
 export default function PackageExplorer(props: Props) {
-    const [inputTextValue, setInputTextValue] = useState("");
+    const router = useContext(RouterContext);
     const graphql = useContext(GraphqlContext);
 
+    const [inputTextValue, setInputTextValue] = useState("");
     const [currentPackage, setCurrentPackage] = useState<PackageContent>(null);
-    useEffect(() => fetchPackage(""), []);
+    
+    useEffect(() => fetchPackage(props.packageName), [props.packageName]);
 
 
     return <section className="package-explorer">
@@ -25,25 +29,25 @@ export default function PackageExplorer(props: Props) {
             type="text"
             value={inputTextValue}
             onChange={el => setInputTextValue(el.target.value)}/>
-        <button onClick={() => fetchPackage(inputTextValue)}>Go</button>
+        <button onClick={() => router.route(Urls.getTheoryPackage(props.theoryId, inputTextValue))}>Go</button>
         <button onClick={createNewPackage}>New package</button>
         <button onClick={deletePackage}>Delete package</button>
-        <button onClick={createNewScript}>New Script</button>
+        <Link href={Urls.getScriptCreationPage(props.theoryId, props.packageName)} openInNewTab={true}>New Script</Link>
 
         {currentPackage && <>
           <div>
-              {currentPackage.packageData.path && <button
-                  onClick={() => fetchParent(currentPackage.packageData.path)}
+              {currentPackage.packageData.path && <Link
+                  href={getLinkToParent()}
                   className="app__shy-button package-explorer__package">
                   ..
-                </button>
+                </Link>
               }
-            {currentPackage.packages.map(p => <button
+            {currentPackage.packages.map(p => <Link
               key={p.id}
-              onClick={() => fetchPackage(p.path)}
+              href={Urls.getTheoryPackage(props.theoryId, p.path)}
               className="app__shy-button package-explorer__package">
               {p.name}
-            </button>)}
+            </Link>)}
           </div>
           <div>
               {currentPackage.statements.map(s => <StatementBox key={s.id} stmt={s} />)}
@@ -55,19 +59,7 @@ export default function PackageExplorer(props: Props) {
     function fetchPackage(path: string) {
         graphql
             .query(FETCH_PACKAGE, {theoryId: props.theoryId, packageName: path})
-            .then(q => {
-                setCurrentPackage(q.ls);
-                props.onPackageChanged(q.ls);
-            });
-    }
-
-    function fetchParent(path: string) {
-        graphql
-            .query(FETCH_PARENT, {theoryId: props.theoryId, packageName: path})
-            .then(q => {
-                setCurrentPackage(q.lsParent);
-                props.onPackageChanged(q.lsParent);
-            });
+            .then(q => setCurrentPackage(q.ls));
     }
 
     function createNewPackage() {
@@ -88,28 +80,21 @@ export default function PackageExplorer(props: Props) {
             theoryId: props.theoryId,
             path: currentPackage.packageData.path,
         })
-            .then(() => fetchParent(currentPackage.packageData.path))
+            .then(() => router.route(getLinkToParent()))
             .catch(errors => window.alert(getFirstMessageOf(errors)))
     }
-
-    function createNewScript() {
-        window.location.href = "/?p=create-script&id=" + props.theoryId
+    
+    function getLinkToParent() : string {
+        const indexOfDot = currentPackage.packageData.path.lastIndexOf(".");
+        const parent = indexOfDot < 0 ? "" : currentPackage.packageData.path.slice(0, indexOfDot);
+        
+        return Urls.getTheoryPackage(props.theoryId, parent);
     }
 }
 
 const FETCH_PACKAGE = `
     query($theoryId: Long!, $packageName:String!) {
         ls(theoryId: $theoryId, packageName:$packageName) {
-            packageData { id, name, path }
-            statements {id, name, path, text, type}
-            packages{id, name, path}
-        }
-    }
-`;
-
-const FETCH_PARENT = `
-    query($theoryId: Long!, $packageName:String!) {
-        lsParent(theoryId: $theoryId, packageName:$packageName) {
             packageData { id, name, path }
             statements {id, name, path, text, type}
             packages{id, name, path}

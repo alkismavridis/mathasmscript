@@ -5,6 +5,15 @@
   //justify-content: start;
 }
 
+.parsed-result-panel__theory-image {
+  background-image: url(../../../assets/theory-graph.png);
+  background-size: contain;
+  width: 80px;
+  background-repeat-x: no-repeat;
+  background-position-x: center;
+  border: solid 1px black;
+}
+
 .parsed-result-panel__success {
   color: red;
 
@@ -17,6 +26,7 @@
   grid-template-columns: auto auto auto;
   justify-content: start;
   grid-gap: 8px;
+  margin-left: 8px;
 }
 
 .parsed-result-panel__comment {

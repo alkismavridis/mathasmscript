@@ -5,13 +5,14 @@ import ParserResult from "../../../../entities/model/ParserResult";
 import ParsedResultPanel from "../../reusables/ParsedResultPanel/ParsedResultPanel";
 
 interface Props {
-    theoryId: number
+    theoryId: number,
+    packageName: string,
 }
 
 export default function ScriptCreationPage(props: Props) {
     const graphql = useContext(GraphqlContext);
 
-    const [scriptText, setScriptText] = useState("");
+    const [scriptText, setScriptText] = useState(`package ${props.packageName}\n\n`);
     const [parsedResult, setParsedResult] = useState(null as ParserResult);
     const [isSending, setSending] = useState(false);
 

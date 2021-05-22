@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {GraphqlContext} from "../../../utils/DiContext";
 import Theory from "../../../../entities/model/Theory";
 import Urls from "../../../utils/Urls";
+import Link from "../../reusables/Link";
 
 
 export default function HomePage() {
@@ -11,7 +12,7 @@ export default function HomePage() {
 
     return <main className="app__page">
         <h1>Welcome to Math Asm!</h1>
-        {theories.map(th => <a href={Urls.getTheoryOverview(th.id)}>{th.name}</a>)}
+        {theories.map(th => <Link href={Urls.getTheoryOverview(th.id)} key={th.id}>{th.name}</Link>)}
     </main>;
 
     function fetchTheories() {
